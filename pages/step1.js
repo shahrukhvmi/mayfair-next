@@ -9,7 +9,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 // import { nextStep } from "../../store/slice/stepper";
 import { useDispatch, useSelector } from "react-redux";
-import { setStep1 } from "@/Components/store/steps";
+import { setStep1 } from "@/store/steps";
 import dayjs from "dayjs";
 // import { useFetchAddressesQuery } from "../../store/services/addressApi/addressApi";
 import toast from "react-hot-toast";
