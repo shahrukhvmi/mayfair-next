@@ -16,6 +16,9 @@ import toast from "react-hot-toast";
 // import { usePostStepsMutation } from "../../store/services/Steps/Steps";
 import NextButton from "@/Components/NextButton/NextButton";
 import StepperWrapper from "@/layout/StepperWrapper";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 // import { useLocation } from "react-router-dom";
 
 const Stepone = () => {
@@ -25,6 +28,10 @@ const Stepone = () => {
       behavior: "smooth",
     });
   }, []);
+
+  const step1Data = useSelector((state) => state.steps.step1);
+
+  console.log(step1Data, "step1Data");
 
   //   const location = useLocation();
 
@@ -84,19 +91,19 @@ const Stepone = () => {
   const [searchClicked, setSearchClicked] = useState(false);
 
   useEffect(() => {
-    if (lastConsultation || prevStep1 || userInfo) {
-      setZipCode(prevStep1?.address?.postalcode || lastConsultation?.address?.postalcode || "");
-      setValue("postCode", prevStep1?.address?.postalcode || lastConsultation?.address?.postalcode || "");
-      setValue("firstName", prevStep1?.firstName || lastConsultation?.firstName || "" || userInfo?.fname);
-      setValue("lastName", lastConsultation?.lastName || prevStep1?.lastName || "" || userInfo?.lname);
-      setValue("phoneNumber", lastConsultation?.phoneNo || prevStep1?.phoneNo || "" || userInfo?.phone);
-      setValue("gender", lastConsultation?.gender || prevStep1?.gender || "" || userInfo?.gender);
-      setValue("dateOfBirth", lastConsultation?.dob || prevStep1?.dob || "" || userInfo?.dob);
-      setValue("breastFeeding", lastConsultation?.pregnancy || prevStep1?.pregnancy || "");
-      setValue("ethnicity", prevStep1?.ethnicity || "" || lastConsultation?.ethnicity);
-      setValue("streetAddress", lastConsultation?.address?.addressone || prevStep1?.address?.addressone || "");
-      setValue("streetAddress2", lastConsultation?.address?.addresstwo || prevStep1?.address?.addresstwo || "");
-      setValue("city", lastConsultation?.address?.city || prevStep1?.address?.city || "");
+    if (step1Data) {
+      setZipCode(step1Data?.address?.postalcode || "");
+      setValue("postCode", step1Data?.address?.postalcode || "");
+      setValue("firstName", step1Data?.firstName || "");
+      setValue("lastName", step1Data?.lastName || "");
+      setValue("phoneNumber", step1Data?.phoneNo || "");
+      setValue("gender", step1Data?.gender || "");
+      setValue("dateOfBirth", step1Data?.dob || "");
+      setValue("breastFeeding", step1Data?.pregnancy || "");
+      setValue("ethnicity", step1Data?.ethnicity || "");
+      setValue("streetAddress", step1Data?.address?.addressone || "");
+      setValue("streetAddress2", step1Data?.address?.addresstwo || "");
+      setValue("city", step1Data?.address?.city || "");
       // setValue("country", lastConsultation.address?.country || "");
 
       const dob = getValues("dateOfBirth");
@@ -132,7 +139,7 @@ const Stepone = () => {
         }
       }
 
-      setValue("state", prevStep1?.address?.state || "" || lastConsultation?.address?.state);
+      setValue("state", step1Data?.address?.state || "");
       trigger([
         "firstName",
         "lastName",
@@ -149,7 +156,7 @@ const Stepone = () => {
         if (!isValid) console.log("Errors:", errors);
       });
     }
-  }, [lastConsultation, setValue, trigger, prevStep1]);
+  }, [setValue, trigger, step1Data]);
 
   // 👇👇**RTK Query - Fetch addresses**👇👇
   //   const { data, error, isLoading } = useFetchAddressesQuery(zipCode, {
@@ -368,6 +375,12 @@ const Stepone = () => {
   const error = null;
   const loader = null;
   const data = null;
+
+  const router = useRouter();
+
+  const handleNextBtn = () => {
+    router.push("/step2");
+  };
   return (
     <StepperWrapper>
       <div className="pb-20 sm:pb-0 px-12 my-8">
@@ -824,11 +837,26 @@ const Stepone = () => {
           <div className="hidden justify-start sm:flex">
             <div className="mt-2 sm:max-w-40">
               <div className="text-center">
-                <NextButton
+                <button
+                  onClick={handleNextBtn}
+                  type="submit"
                   disabled={!isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError}
-                  label={"Next"}
-                  loading={loader}
-                />
+                  className={`text-white px-9 py-2 rounded-md font-medium transition-all duration-150 ease-in ${
+                    !isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError
+                      ? "disabled:opacity-50 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                      : "text-white rounded-md bg-primary bg-violet-700"
+                  }`}
+                >
+                  {loader ? (
+                    // Loading Spinner with Label
+                    <div className="flex items-center space-x-2">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span></span>
+                    </div>
+                  ) : (
+                    <span className="text-md font-semibold px-6">Next</span>
+                  )}
+                </button>
               </div>
             </div>
           </div>

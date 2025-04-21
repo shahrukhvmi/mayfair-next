@@ -1,7 +1,8 @@
 import React from "react";
-import ProductCard from "../../ProductCard/ProductCard";
-import { useGetProductsQuery } from "../../../store/services/Dashboard/dashboardApi";
+import ProductCard from "@/Components/ProductCard/ProductCard";
 import { Skeleton } from "@mui/material";
+import { useGetProductsQuery } from "@/store/dashboardApi";
+import axios from "axios";
 
 const SkeletonCard = () => (
   <div className="p-4 my-3 bg-white rounded-lg shadow-md">
@@ -18,13 +19,15 @@ const SkeletonCard = () => (
 );
 
 
+
 const MyAccount = () => {
   const { data, error, isLoading } = useGetProductsQuery();
 
 
-  console.log(data?.data?.reorder?.inventories,"statuasadsdss")
+  console.log(data, "statuasadsdss")
+
   return (
-    <div className="p-5 sm:p-10 sm:bg-gray-50 sm:min-h-screen sm:rounded-lg sm:shadow-md my-5">
+    <div className={"p-5 sm:p-10 sm:bg-gray-50 sm:min-h-screen sm:rounded-lg sm:shadow-md my-5"}>
       {/* ✅ Reorder Treatment Section */}
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -85,7 +88,7 @@ const MyAccount = () => {
               Available Treatments
             </h1>
             <p className="text-gray-600 text-left text-sm leading-relaxed xl:w-3/4 mt-2 ">
-            We offer the following weight loss injections treatment options to help you in your weight loss journey. You can request weight loss injections online at Mayfair Weight Loss Clinic. All treatment options are subject to approval by our UK-registered prescribers following the completion and assessment of the medical consultation form. View the weight loss treatment options below for more information. </p>
+              We offer the following weight loss injections treatment options to help you in your weight loss journey. You can request weight loss injections online at Mayfair Weight Loss Clinic. All treatment options are subject to approval by our UK-registered prescribers following the completion and assessment of the medical consultation form. View the weight loss treatment options below for more information. </p>
           </header>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

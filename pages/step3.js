@@ -3,14 +3,22 @@ import { useDispatch, useSelector } from "react-redux";
 // import { nextStep, prevStep } from "../../store/slice/stepper";
 // import { usePostStepsMutation } from "../../store/services/Steps/Steps";
 import toast from "react-hot-toast";
-// import { setStep3 } from "../../store/slice/stepSlice";
+import { setStep3 } from "@/store/steps";
 import { useForm, Controller } from "react-hook-form";
 import NextButton from "@/Components/NextButton/NextButton";
 import BackButton from "@/Components/BackButton/BackButton";
 import { FaCheck } from "react-icons/fa";
 import StepperWrapper from "@/layout/StepperWrapper";
+import { useRouter } from "next/router";
+import { useGetQuestionsQuery } from "@/store/questionsApi";
 
 export default function step3() {
+  const router = useRouter();
+
+  const step3Data = useSelector((state) => state.steps.step3);
+
+  const { data } = useGetQuestionsQuery();
+
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -19,7 +27,6 @@ export default function step3() {
   }, []);
 
   const dispatch = useDispatch();
-  //   const currentStep = useSelector((state) => state.step.currentStep);
 
   // States
   const [questions, setQuestions] = useState([]);
@@ -39,81 +46,49 @@ export default function step3() {
   });
 
   // Load data from localStorage
-  //   const stepPrevApiData = useMemo(() => localStorage.getItem("stepPrevApiData"), []);
-  //   const stepPrev3 = useMemo(() => localStorage.getItem("step3"), []);
-  //   const parsedData = stepPrevApiData ? JSON.parse(stepPrevApiData) : null;
+  const stepPrevApiData = useMemo(() => localStorage.getItem("stepPrevApiData"), []);
+  const stepPrev3 = useMemo(() => localStorage.getItem("step3"), []);
+  const parsedData = stepPrevApiData ? JSON.parse(stepPrevApiData) : null;
   // const stepPrev3Data = stepPrev3 ? JSON.parse(stepPrev3) : null;
-  //   const stepPrev3Data = stepPrev3 !== undefined && stepPrev3 != "undefined" && stepPrev3 ? JSON.parse(stepPrev3) : undefined;
+  const stepPrev3Data = stepPrev3 !== undefined && stepPrev3 != "undefined" && stepPrev3 ? JSON.parse(stepPrev3) : undefined;
 
-  //   useEffect(() => {
-  //     if (parsedData) {
-  //       const medicalQuestions = parsedData?.medical_question || [];
-  //       const lastConsultationData = parsedData?.last_consultation_data?.medicalInfo || [];
+  useEffect(() => {
+    if (parsedData) {
+      const medicalQuestions = parsedData?.medical_question || [];
+      const lastConsultationData = parsedData?.last_consultation_data?.medicalInfo || [];
 
-  //       // Merge Data
-  //       const mergedQuestions = medicalQuestions.map((q, index) => {
-  //         const prevAnswer = stepPrev3Data?.find((p) => p.question === q.content);
-  //         const matchedConsultation = lastConsultationData.find((lq) => lq.question === q.content);
+      // Merge Data
+      const mergedQuestions = medicalQuestions.map((q, index) => {
+        const prevAnswer = stepPrev3Data?.find((p) => p.question === q.content);
+        const matchedConsultation = lastConsultationData.find((lq) => lq.question === q.content);
 
-  //         return {
-  //           ...q,
-  //           id: index,
-  //           answer: prevAnswer?.answer || matchedConsultation?.answer || "",
-  //           subfield_response: prevAnswer?.subfield_response || matchedConsultation?.subfield_response || "",
-  //         };
-  //       });
+        return {
+          ...q,
+          id: index,
+          answer: prevAnswer?.answer || matchedConsultation?.answer || "",
+          subfield_response: prevAnswer?.subfield_response || matchedConsultation?.subfield_response || "",
+        };
+      });
 
-  //       setQuestions(mergedQuestions);
+      setQuestions(mergedQuestions);
 
-  //       // Pre-fill Form Values
-  //       const initialResponses = {};
-  //       mergedQuestions.forEach((q) => {
-  //         initialResponses[q.id] = {
-  //           answer: q.answer,
-  //           subfield_response: q.subfield_response,
-  //           sub_field_prompt: q.sub_field_prompt,
-  //           has_sub_field: q.has_sub_field,
-  //         };
-  //         setValue(`responses[${q.id}].answer`, q.answer);
-  //         setValue(`responses[${q.id}].subfield_response`, q.subfield_response);
-  //       });
-  //       setResponses(initialResponses);
-  //     }
-  //   }, [stepPrevApiData, stepPrev3, setValue]);
+      // Pre-fill Form Values
+      const initialResponses = {};
+      mergedQuestions.forEach((q) => {
+        initialResponses[q.id] = {
+          answer: q.answer,
+          subfield_response: q.subfield_response,
+          sub_field_prompt: q.sub_field_prompt,
+          has_sub_field: q.has_sub_field,
+        };
+        setValue(`responses[${q.id}].answer`, q.answer);
+        setValue(`responses[${q.id}].subfield_response`, q.subfield_response);
+      });
+      setResponses(initialResponses);
+    }
+  }, [stepPrevApiData, stepPrev3, setValue]);
 
   // Handle Changes
-
-  //   const medicalData = [
-  //     {
-  //       question: "Do you have any allergies or intolerances?",
-  //       qsummary: "Do you have any allergies or intolerances?",
-  //       answer: "no",
-  //       subfield_response: "",
-  //       sub_field_prompt: "Give us additional information, please.",
-  //       has_sub_field: true,
-  //     },
-  //     {
-  //       question: "Have you been prescribed and are currently taking weight loss medication (including weight loss injections) from another provider?",
-  //       qsummary: "Have you been prescribed and are currently taking weight loss medication (including weight loss injections) from another provider?",
-  //       answer: "no",
-  //       subfield_response: "",
-  //       sub_field_prompt:
-  //         "Please let us know which medication you are currently taking for weight loss (e.g. Mounjaro, Wegovy, Saxenda, Ozempic) and the current dose.",
-  //       has_sub_field: true,
-  //     },
-  //     {
-  //       question:
-  //         "Are you currently taking any medication (including injections such as Victoza, Mounjaro, Ozempic, Trulicity, Byetta, Bydureon) for the treatment of diabetes?",
-  //       qsummary:
-  //         "Are you currently taking any medication (including injections such as Victoza, Mounjaro, Ozempic, Trulicity, Byetta, Bydureon) for the treatment of diabetes?",
-  //       answer: "no",
-  //       subfield_response: "",
-  //       sub_field_prompt: "Give us additional information, please.",
-  //       has_sub_field: false,
-  //     },
-  //     // Add all other questions from your medicalData array
-  //   ];
-
   const handleChange = async (id, value, isSubField = false) => {
     setResponses((prev) => {
       const updated = isSubField ? { ...prev[id], subfield_response: value } : { ...prev[id], answer: value };
@@ -138,11 +113,11 @@ export default function step3() {
   };
 
   // Submit API Call
-  //   const [postSteps, { isLoading }] = usePostStepsMutation();
-  //   const getPid = localStorage.getItem("pid");
-  //   const stockPid = localStorage.getItem("p_id");
+  // const [postSteps, { isLoading }] = usePostStepsMutation();
+  // const getPid = localStorage.getItem("pid");
+  // const stockPid = localStorage.getItem("p_id");
 
-  //   const reorder_concent = localStorage.getItem("reorder_concent") || null;
+  // const reorder_concent = localStorage.getItem("reorder_concent") || null;
   const onSubmit = async () => {
     const medicalInfo = questions.map((q) => ({
       question: q.content,
@@ -153,21 +128,22 @@ export default function step3() {
       has_sub_field: responses[q.id]?.has_sub_field || false,
     }));
 
-    try {
-      const response = await postSteps({
-        medicalInfo,
-        pid: getPid || stockPid,
-        reorder_concent: reorder_concent ? reorder_concent.toString() : null,
-      }).unwrap();
-      if (response?.status === true) {
-        dispatch(setStep3(response?.lastConsultation?.fields?.medicalInfo));
-        dispatch(nextStep());
-      } else {
-        toast.error("Failed to submit data.");
-      }
-    } catch (err) {
-      toast.error("An error occurred while submitting.");
-    }
+    dispatch(setStep3(medicalInfo));
+    // try {
+    //   const response = await postSteps({
+    //     medicalInfo,
+    //     pid: getPid || stockPid,
+    //     reorder_concent: reorder_concent ? reorder_concent.toString() : null,
+    //   }).unwrap();
+    //   if (response?.status === true) {
+    //     dispatch(setStep3(response?.lastConsultation?.fields?.medicalInfo));
+    //     dispatch(nextStep());
+    //   } else {
+    //     toast.error("Failed to submit data.");
+    //   }
+    // } catch (err) {
+    //   toast.error("An error occurred while submitting.");
+    // }
   };
 
   // Check if Next Button Should be Enabled
@@ -263,7 +239,7 @@ export default function step3() {
             );
           })}
           <div className="mt-10 mb-10 hidden sm:flex">
-            <BackButton label={"Back"} onClick={() => dispatch(prevStep())} />
+            <BackButton label={"Back"} onClick={() => router.push("/step2")} />
             {/* <NextButton disabled={!isNextEnabled || isLoading} label={"Next"} loading={isLoading} /> */}
             <NextButton disabled={!isNextEnabled} label={"Next"} />
           </div>
@@ -274,7 +250,7 @@ export default function step3() {
               <div className="relative flex w-full justify-between items-center">
                 {/* Back Button */}
                 <button
-                  onClick={() => dispatch(prevStep())}
+                  onClick={() => router.push("/step2")}
                   className="flex flex-col items-center justify-center text-white rounded-md bg-violet-700 p-3"
                 >
                   <span className="text-md font-semibold px-6">Back</span>

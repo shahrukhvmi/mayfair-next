@@ -17,7 +17,7 @@ export const dashboardApi = createApi({
     endpoints: (builder) => ({
         getProducts: builder.query({
             query: (data) => ({
-                url: "api/products/GetProducts",
+                url: "api/products/GetAllProducts",
                 method: "GET",
                 body: data,
             }),
