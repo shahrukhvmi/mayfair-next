@@ -5,14 +5,18 @@ import { useDispatch, useSelector } from "react-redux";
 // import { nextStep, prevStep, triggerStep } from "../../store/slice/stepper";
 // import { usePostStepsMutation } from "../../store/services/Steps/Steps";
 import toast from "react-hot-toast";
-// import { setStep2 } from "../../store/slice/stepSlice";
+import { setStep2 } from "@/store/steps";
 import NextButton from "@/Components/NextButton/NextButton";
 import BackButton from "@/Components/BackButton/BackButton";
 // import PrevButton from "../PrevBtn/PrevButton";
 import { BsInfoCircle } from "react-icons/bs";
 import StepperWrapper from "@/layout/StepperWrapper";
+import { useRouter } from "next/router";
 
 export default function step2() {
+  const router = useRouter();
+  const step2Data = useSelector((state) => state.steps.step2);
+
   const {
     register,
     setValue,
@@ -54,8 +58,8 @@ export default function step2() {
   const [lastConsultation, setLastConsultation] = useState(null);
   const [filledData, setFilledData] = useState(null);
   const [lastBmi, setLastBmi] = useState(null);
-  const [prevStep1, setPrevStep1] = useState(null);
-  const [prevStep2, setPrevStep2] = useState(null);
+  //   const [prevStep1, setPrevStep1] = useState(null);
+  //   const [prevStep2, setPrevStep2] = useState(null);
   const [preferNotToSay, setPreferNotToSay] = useState(false);
   const [showCheckBox, setShowCheckBox] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
@@ -81,27 +85,27 @@ export default function step2() {
   //   const stepPrev = useMemo(() => localStorage.getItem("step1"), []);
   //   const stepPrev2 = useMemo(() => localStorage.getItem("step2"), []);
 
-  //   useEffect(() => {
-  //     if (stepPrevApiData || stepPrev || stepPrev2) {
-  //       const parsedData = JSON.parse(stepPrevApiData);
-  //       const stepPrevParse = stepPrev !== undefined && stepPrev != "undefined" && stepPrev ? JSON.parse(stepPrev) : undefined;
+  useEffect(() => {
+    if (step2Data) {
+      //   const parsedData = JSON.parse(stepPrevApiData);
+      //   const stepPrevParse = stepPrev !== undefined && stepPrev != "undefined" && stepPrev ? JSON.parse(stepPrev) : undefined;
 
-  //       // const stepPrevParse = JSON.parse(stepPrev);
-  //       const stepPrevParse2 = JSON.parse(stepPrev2);
-  //       setLastConsultation(parsedData);
-  //       setLastBmi(parsedData?.last_consultation_data?.fields?.bmi || parsedData?.last_consultation_data?.bmi);
-  //       setFilledData(parsedData?.last_consultation_data?.fields || parsedData?.last_consultation_data);
-  //       // Set previous step data
-  //       setPrevStep1(stepPrevParse);
-  //       setPrevStep2(stepPrevParse2);
-  //     }
-  //   }, [stepPrevApiData, stepPrev, stepPrev2]);
+      // const stepPrevParse = JSON.parse(stepPrev);
+      //   const stepPrevParse2 = JSON.parse(stepPrev2);
+      setLastConsultation(step2Data);
+      setLastBmi(step2Data?.last_consultation_data?.bmi);
+      setFilledData(step2Data?.last_consultation_data?.fields || step2Data?.last_consultation_data);
+      // Set previous step data
+      //   setPrevStep1(step2Data);
+      //   setPrevStep2(step2Data);
+    }
+  }, [step2Data]);
 
   useEffect(() => {
-    if (prevStep1) {
-      setPreferNotToSay(prevStep1?.ethnicity === "yes" ? true : false);
+    if (step2Data) {
+      setPreferNotToSay(step2Data?.ethnicity === "yes" ? true : false);
     }
-  }, [prevStep1]);
+  }, [step2Data]);
 
   // };
   const handleCheckboxChange = (event) => {
@@ -180,12 +184,12 @@ export default function step2() {
   useEffect(() => {
     const getInStockPid = localStorage.getItem("p_id");
 
-    if (lastBmi || prevStep2) {
-      setValue("heightFt", lastBmi?.ft || prevStep2?.ft || "");
-      setValue("heightIn", lastBmi?.inch || prevStep2?.inch || "");
+    if (step2Data) {
+      setValue("heightFt", step2Data?.ft || "");
+      setValue("heightIn", step2Data?.inch || "");
       if (getInStockPid) {
-        setValue("weightStones", lastBmi?.stones || prevStep2?.stones || "");
-        setValue("weightLbs", lastBmi?.pound || prevStep2?.pound || "");
+        setValue("weightStones", step2Data?.stones || "");
+        setValue("weightLbs", step2Data?.pound || "");
       } else {
         setValue("weightStones", "");
         setValue("weightLbs", "");
@@ -193,20 +197,17 @@ export default function step2() {
       // lastBmi?.stones ||
 
       //  lastBmi?.pound ||
-      setValue("weightKg", lastBmi?.kg || prevStep2?.kg || "");
-      setValue("heightCm", lastBmi?.cm || prevStep2?.cm || "");
-      setValue("bmi", lastBmi?.bmi || prevStep2?.bmi || "");
+      setValue("weightKg", step2Data?.kg || "");
+      setValue("heightCm", step2Data?.cm || "");
+      setValue("bmi", step2Data?.bmi || "");
       // hidden
-      setValue("hiddenInch", lastBmi?.inch || prevStep2?.inch || "");
-      setValue("hiddenCm", lastBmi?.cm || prevStep2?.cm || "");
-      setValue("hiddenLb", lastBmi?.pound || prevStep2?.pound || "");
-      setValue("hiddenKg", lastBmi?.kg || prevStep2?.kg || "");
-      setValue("previously_taking_medicine", lastBmi?.bmiConsent?.previously_taking_medicine || prevStep2?.previously_taking_medicine || "");
-      setValue("weight_related_comorbidity", lastBmi?.bmiConsent?.weight_related_comorbidity || prevStep2?.weight_related_comorbidity || "");
-      setValue(
-        "weight_related_comorbidity_explanation",
-        lastBmi?.bmiConsent?.weight_related_comorbidity_explanation || prevStep2?.weight_related_comorbidity_explanation || ""
-      );
+      setValue("hiddenInch", step2Data?.inch || "");
+      setValue("hiddenCm", step2Data?.cm || "");
+      setValue("hiddenLb", step2Data?.pound || "");
+      setValue("hiddenKg", step2Data?.kg || "");
+      setValue("previously_taking_medicine", step2Data?.previously_taking_medicine || "");
+      setValue("weight_related_comorbidity", step2Data?.weight_related_comorbidity || "");
+      setValue("weight_related_comorbidity_explanation", step2Data?.weight_related_comorbidity_explanation || "");
       trigger("bmi");
       trigger("heightFt");
       trigger("heightIn");
@@ -218,7 +219,7 @@ export default function step2() {
       trigger("weight_related_comorbidity");
       trigger("weight_related_comorbidity_explanation");
     }
-  }, [lastBmi, prevStep2, setValue, trigger]);
+  }, [step2Data, setValue, trigger]);
 
   const dispatch = useDispatch();
   //   const currentStep = useSelector((state) => state.step.currentStep);
@@ -385,6 +386,8 @@ export default function step2() {
   const onSubmit = async (data) => {
     const reorderStatus = JSON.parse(localStorage.getItem("reorder_concent"));
 
+    console.log("This is onSubmit");
+
     const BMI = {
       unit: unit,
       ft: data.heightFt,
@@ -410,46 +413,49 @@ export default function step2() {
       },
       ethnicity: "",
     };
-    try {
-      const response = await postSteps({
-        bmi: BMI,
-        pid: getPid || stockPid,
-      }).unwrap();
 
-      if (response?.status === true) {
-        dispatch(setStep2(response?.lastConsultation?.fields?.bmi));
+    dispatch(setStep2(BMI));
+    router.push("/step3");
+    // try {
+    //   const response = await postSteps({
+    //     bmi: BMI,
+    //     pid: getPid || stockPid,
+    //   }).unwrap();
 
-        if (reorderStatus === false) {
-          dispatch(triggerStep(7));
-          return;
-        }
-        if (reorderStatus === true) {
-          dispatch(nextStep());
-        } else {
-          dispatch(nextStep());
-          return;
-        }
-      } else {
-        toast.error("Invalid login response");
-      }
-    } catch (err) {
-      const errors = err?.data?.errors;
-      if (errors && typeof errors === "object") {
-        Object.keys(errors).forEach((key) => {
-          const errorMessage = errors[key];
-          Array.isArray(errorMessage) ? errorMessage.forEach((msg) => toast.error(msg)) : toast.error(errorMessage);
-        });
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
-    }
+    //   if (response?.status === true) {
+    //     dispatch(setStep2(BMI));
+
+    //     if (reorderStatus === false) {
+    //       dispatch(triggerStep(7));
+    //       return;
+    //     }
+    //     if (reorderStatus === true) {
+    //       dispatch(nextStep());
+    //     } else {
+    //       dispatch(nextStep());
+    //       return;
+    //     }
+    //   } else {
+    //     toast.error("Invalid login response");
+    //   }
+    // } catch (err) {
+    //   const errors = err?.data?.errors;
+    //   if (errors && typeof errors === "object") {
+    //     Object.keys(errors).forEach((key) => {
+    //       const errorMessage = errors[key];
+    //       Array.isArray(errorMessage) ? errorMessage.forEach((msg) => toast.error(msg)) : toast.error(errorMessage);
+    //     });
+    //   } else {
+    //     toast.error("An unexpected error occurred.");
+    //   }
+    // }
   };
 
   useEffect(() => {
-    if (prevStep1) {
-      setPreferNotToSay(prevStep1?.ethnicity === "yes");
+    if (step2Data) {
+      setPreferNotToSay(step2Data?.ethnicity === "yes");
     }
-  }, [prevStep1]);
+  }, [step2Data]);
 
   return (
     <StepperWrapper>
@@ -1089,7 +1095,7 @@ export default function step2() {
               </div>
               {/* <PrevButton label={"Back"} onClick={() => dispatch(prevStep())} /> */}
               <div className="mt-10 hidden sm:flex">
-                <BackButton label={"Back"} onClick={() => dispatch(prevStep())} />
+                <BackButton label={"Back"} onClick={() => router.push("/step1")} />
                 {/* <NextButton
                 disabled={errorMessage || isLoading || !isValid || (showCheckBox && !isAtLeastOneCheckboxValid())}
                 label={"Next"}
@@ -1201,10 +1207,10 @@ export default function step2() {
                 <>
                   <div
                     id="alert-border-4"
-                    class="flex items-center p-4 mb-4 text-red-600 border-t-4 bg-red-50  border-red-600 rounded-md mb-30 w-full ml-8"
+                    className="flex items-center p-4 mb-4 text-red-600 border-t-4 bg-red-50  border-red-600 rounded-md mb-30 w-full ml-8"
                     role="alert"
                   >
-                    <div class="ms-3 text-sm font-medium">
+                    <div className="ms-3 text-sm font-medium">
                       <p>{someError}</p>
                     </div>
                   </div>

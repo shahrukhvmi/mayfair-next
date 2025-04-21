@@ -511,16 +511,15 @@ export default function step6() {
   }, [addonCart?.addonCart]);
 
   return (
-    <StepperWrapper>
-      <section className="pb-20 sm:pb-0 px-12 my-8">
-        <div className="w-full  bg-white my-6 rounded-xl">
-          <div className="flex justify-start"></div>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-12 gap-4">
-              {/* Left Column (Main Content) */}
-              <div className="col-span-12 sm:col-span-8 md:px-4">
-                {/* Product Info */}
-                {/* <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+    <section className="px-6 py-6 my-8 bg-[#dacfff]">
+      <div className="w-full  bg-white rounded-xl py-12">
+        <div className="flex justify-start"></div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid grid-cols-12 gap-4">
+            {/* Left Column (Main Content) */}
+            <div className="col-span-12 sm:col-span-8 md:px-4">
+              {/* Product Info */}
+              {/* <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
                 <div className="bg-violet-700 p-6">
                   <img src={product?.img} alt={product?.name} className="w-full h-40 object-contain" />
                 </div>
@@ -530,205 +529,204 @@ export default function step6() {
                 </div>
               </div> */}
 
-                <h1 className="text-2xl lg:text-3xl 2xl:text-4xl font-light">
-                  Suggested
-                  <span className="font-bold"> Treatment</span>
-                </h1>
-                <div className="bg-gray-100 border border-gray-200 mt-4 flex flex-row items-center md:w-full rounded-lg shadow">
-                  <img
-                    className="bg-white p-4 object-cover rounded-lg w-2/5 md:h-auto md:w-1/4 md:rounded-none md:rounded-s-lg"
-                    src={product.img}
-                    alt=""
-                  />
-                  <div className="flex flex-col justify-between p-4 leading-normal md:w-[65%]">
-                    <h5 className="mb-2 md:text-2xl font-bold tracking-tight text-gray-900 ">{product.name}</h5>
-                    <p className="mb-3 font-normal text-gray-700  text-sm">From £{product.price}</p>
-                  </div>
-                </div>
-
-                <h2 className="text-2xl lg:text-3xl 2xl:text-4xl font-light my-4 pt-3">
-                  Select
-                  <span className="font-bold"> Dosage</span>
-                </h2>
-                <div className="grid grid-cols-2 w-full md:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-5 md:w-full sm:w-[50%]">
-                  {Array.isArray(variations) &&
-                    variations.map((dose, index) => (
-                      <Dose
-                        key={index}
-                        id={dose.id}
-                        index={index}
-                        onClick={() => handleVariationClick(dose.name, index)}
-                        doseData={dose || cart}
-                        allowed={parseInt(product?.allowed)}
-                        onIncrement={() => handleIncrementDose(index)}
-                        onDecrement={() => handleDecrementDose(index)}
-                        totalSelectedQty={getTotalSelectedQty()}
-                        isSelected={dose.qty > 0}
-                        productName={product?.name}
-                        onSelect={(e) => {
-                          setRemoveSelected((prevState) => [...prevState, { e, index }]);
-                          handleSelect(e, index);
-                        }}
-                        cart={cart}
-                        setVariations={setVariations}
-                        handleRemoveItem={handleRemoveItem}
-                        handleSelect={handleSelect}
-                        removeSeleted={removeSeleted}
-                        setRemoveSelected={setRemoveSelected}
-                        handleVariationClick={handleVariationClick}
-                      />
-                    ))}
-                </div>
-                {console.log(product, "sdsdsdsd")}
-                {product?.show_expiry === 1 && (
-                  <div className="flex flex-col space-y-2 text-sm py-3 mt-6">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          {...register("terms", {
-                            required: isExpiryRequired ? "Please confirm that you have read and acknowledged the expiry information." : false, // ❌ No validation if not required
-                          })}
-                          icon={<span className="w-5 h-5 border-2 border-gray-400 rounded-full flex items-center justify-center" />}
-                          checkedIcon={
-                            <span className="w-5 h-5 border-2 border-violet-700 rounded-full flex items-center justify-center">
-                              <span className="w-2.5 h-2.5 bg-violet-700 rounded-full" />
-                            </span>
-                          }
-                          sx={{
-                            "& .MuiSvgIcon-root": {
-                              display: "none", // Hide default Material-UI checkbox icon
-                            },
-                          }}
-                        />
-                      }
-                      label={
-                        <p className="font-sans font-bold text-md italic">
-                          Please confirm that you have reviewed the expiry dates of the selected doses.
-                        </p>
-                      }
-                    />
-
-                    {/* ✅ Show Error Message If Required and Checkbox is Not Checked */}
-                    {errors.terms && <p className="text-red-600 text-xs font-semibold">{errors.terms.message}</p>}
-                  </div>
-                )}
-
-                <div className="flex flex-col mt-4">
-                  {addons?.length > 0 && (
-                    <>
-                      <h2 className="text-2xl lg:text-3xl 2xl:text-4xl font-light my-4">
-                        Select
-                        <span className="font-bold"> Addons</span>
-                      </h2>
-
-                      {/* FLEX ROW TO SHOW IN ONE LINE */}
-                      <div className="flex flex-wrap gap-4">
-                        {addons.map((dose, index) => (
-                          <AddOn
-                            key={index}
-                            id={dose.id}
-                            doseData={dose}
-                            allowed={parseInt(5)}
-                            onIncrement={() => handleIncrementAddons(index)}
-                            onDecrement={() => handleDecrementAddons(index)}
-                            totalSelectedQty={getTotalSelectedQty()}
-                            isSelected={dose.qty > 0}
-                            onSelect={(e) => {
-                              setRemoveSelectedAddon((prevState) => [...prevState, { e, index }]);
-                              handleSelectAddon(e, index);
-                            }}
-                            setAddons={setAddons}
-                            handleRemoveItemAddon={handleRemoveItemAddon}
-                            handleSelectAddon={handleSelectAddon}
-                            removeSeletedAddon={removeSeletedAddon}
-                            setRemoveSelectedAddon={setRemoveSelectedAddon}
-                          />
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                {/* Buttons */}
-                <div className="sm:flex justify-normal mt-6 hidden ">
-                  <BackButton label="Back" onClick={() => dispatch(prevStep())} />
-                  <NextButton label="Proceed to Checkout" disabled={!isValid || !isDoseSelected} />
+              <h1 className="text-2xl lg:text-3xl 2xl:text-4xl font-light">
+                Suggested
+                <span className="font-bold"> Treatment</span>
+              </h1>
+              <div className="bg-gray-100 border border-gray-200 mt-4 flex flex-row items-center md:w-full rounded-lg shadow">
+                <img
+                  className="bg-white p-4 object-cover rounded-lg w-2/5 md:h-auto md:w-1/4 md:rounded-none md:rounded-s-lg"
+                  src={product.img}
+                  alt=""
+                />
+                <div className="flex flex-col justify-between p-4 leading-normal md:w-[65%]">
+                  <h5 className="mb-2 md:text-2xl font-bold tracking-tight text-gray-900 ">{product.name}</h5>
+                  <p className="mb-3 font-normal text-gray-700  text-sm">From £{product.price}</p>
                 </div>
               </div>
 
-              {/* Right Column (Order Summary) */}
-              <div className="col-span-12 sm:col-span-4">
-                <div className="relative lg:sticky lg:top-[7rem]">
-                  <div
-                    className="mx-auto md:mr-auto md:ml-0 w-full max-w-sm p-2 bg-gray-100 border border-gray-200 rounded-lg
+              <h2 className="text-2xl lg:text-3xl 2xl:text-4xl font-light my-4 pt-3">
+                Select
+                <span className="font-bold"> Dosage</span>
+              </h2>
+              <div className="grid grid-cols-2 w-full md:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-5 md:w-full sm:w-[50%]">
+                {Array.isArray(variations) &&
+                  variations.map((dose, index) => (
+                    <Dose
+                      key={index}
+                      id={dose.id}
+                      index={index}
+                      onClick={() => handleVariationClick(dose.name, index)}
+                      doseData={dose || cart}
+                      allowed={parseInt(product?.allowed)}
+                      onIncrement={() => handleIncrementDose(index)}
+                      onDecrement={() => handleDecrementDose(index)}
+                      totalSelectedQty={getTotalSelectedQty()}
+                      isSelected={dose.qty > 0}
+                      productName={product?.name}
+                      onSelect={(e) => {
+                        setRemoveSelected((prevState) => [...prevState, { e, index }]);
+                        handleSelect(e, index);
+                      }}
+                      cart={cart}
+                      setVariations={setVariations}
+                      handleRemoveItem={handleRemoveItem}
+                      handleSelect={handleSelect}
+                      removeSeleted={removeSeleted}
+                      setRemoveSelected={setRemoveSelected}
+                      handleVariationClick={handleVariationClick}
+                    />
+                  ))}
+              </div>
+              {console.log(product, "sdsdsdsd")}
+              {product?.show_expiry === 1 && (
+                <div className="flex flex-col space-y-2 text-sm py-3 mt-6">
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        {...register("terms", {
+                          required: isExpiryRequired ? "Please confirm that you have read and acknowledged the expiry information." : false, // ❌ No validation if not required
+                        })}
+                        icon={<span className="w-5 h-5 border-2 border-gray-400 rounded-full flex items-center justify-center" />}
+                        checkedIcon={
+                          <span className="w-5 h-5 border-2 border-violet-700 rounded-full flex items-center justify-center">
+                            <span className="w-2.5 h-2.5 bg-violet-700 rounded-full" />
+                          </span>
+                        }
+                        sx={{
+                          "& .MuiSvgIcon-root": {
+                            display: "none", // Hide default Material-UI checkbox icon
+                          },
+                        }}
+                      />
+                    }
+                    label={
+                      <p className="font-sans font-bold text-md italic">
+                        Please confirm that you have reviewed the expiry dates of the selected doses.
+                      </p>
+                    }
+                  />
+
+                  {/* ✅ Show Error Message If Required and Checkbox is Not Checked */}
+                  {errors.terms && <p className="text-red-600 text-xs font-semibold">{errors.terms.message}</p>}
+                </div>
+              )}
+
+              <div className="flex flex-col mt-4">
+                {addons?.length > 0 && (
+                  <>
+                    <h2 className="text-2xl lg:text-3xl 2xl:text-4xl font-light my-4">
+                      Select
+                      <span className="font-bold"> Addons</span>
+                    </h2>
+
+                    {/* FLEX ROW TO SHOW IN ONE LINE */}
+                    <div className="flex flex-wrap gap-4">
+                      {addons.map((dose, index) => (
+                        <AddOn
+                          key={index}
+                          id={dose.id}
+                          doseData={dose}
+                          allowed={parseInt(5)}
+                          onIncrement={() => handleIncrementAddons(index)}
+                          onDecrement={() => handleDecrementAddons(index)}
+                          totalSelectedQty={getTotalSelectedQty()}
+                          isSelected={dose.qty > 0}
+                          onSelect={(e) => {
+                            setRemoveSelectedAddon((prevState) => [...prevState, { e, index }]);
+                            handleSelectAddon(e, index);
+                          }}
+                          setAddons={setAddons}
+                          handleRemoveItemAddon={handleRemoveItemAddon}
+                          handleSelectAddon={handleSelectAddon}
+                          removeSeletedAddon={removeSeletedAddon}
+                          setRemoveSelectedAddon={setRemoveSelectedAddon}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Buttons */}
+              <div className="sm:flex justify-normal mt-6 hidden ">
+                <BackButton label="Back" onClick={() => dispatch(prevStep())} />
+                <NextButton label="Proceed to Checkout" disabled={!isValid || !isDoseSelected} />
+              </div>
+            </div>
+
+            {/* Right Column (Order Summary) */}
+            <div className="col-span-12 sm:col-span-4">
+              <div className="relative lg:sticky lg:top-[7rem]">
+                <div
+                  className="mx-auto md:mr-auto md:ml-0 w-full max-w-sm p-2 bg-gray-100 border border-gray-200 rounded-lg
         shadow sm:p-6 "
-                  >
-                    <h2 className="text-lg font-semibold mb-4 p-4">Order Summary</h2>
+                >
+                  <h2 className="text-lg font-semibold mb-4 p-4">Order Summary</h2>
 
-                    <div className="overflow-y-auto max-h-56 p-2">
-                      <OrderSummary
-                        //   cart={cart}
-                        setVariations={setVariations}
-                        handleRemoveItem={handleRemoveItem}
-                        handleSelect={handleSelect}
-                        removeSeleted={removeSeleted}
-                        setRemoveSelected={setRemoveSelected}
-                      />
-                      <OrderSummaryAddons
-                        cart={addonCart?.addonCart}
-                        setAddons={setAddons}
-                        handleRemoveItem={handleRemoveItemAddon}
-                        handleSelect={handleSelectAddon}
-                        removeSeleted={removeSeletedAddon}
-                        setRemoveSelected={setRemoveSelectedAddon}
-                      />
-                    </div>
+                  <div className="overflow-y-auto max-h-56 p-2">
+                    <OrderSummary
+                      //   cart={cart}
+                      setVariations={setVariations}
+                      handleRemoveItem={handleRemoveItem}
+                      handleSelect={handleSelect}
+                      removeSeleted={removeSeleted}
+                      setRemoveSelected={setRemoveSelected}
+                    />
+                    <OrderSummaryAddons
+                      cart={addonCart?.addonCart}
+                      setAddons={setAddons}
+                      handleRemoveItem={handleRemoveItemAddon}
+                      handleSelect={handleSelectAddon}
+                      removeSeleted={removeSeletedAddon}
+                      setRemoveSelected={setRemoveSelectedAddon}
+                    />
+                  </div>
 
-                    {modalOpen && <DosageCheckPopup text={ModalMessage} onHandleConfirmation={onHandleConfirmation} />}
+                  {modalOpen && <DosageCheckPopup text={ModalMessage} onHandleConfirmation={onHandleConfirmation} />}
 
-                    <div className="flex justify-between items-center border-t border-gray-300 p-6 mt-4">
-                      <span className="font-medium text-gray-700">Total</span>
-                      <span className="font-semibold text-lg">£{calculateSubtotal()}</span>
-                    </div>
+                  <div className="flex justify-between items-center border-t border-gray-300 p-6 mt-4">
+                    <span className="font-medium text-gray-700">Total</span>
+                    <span className="font-semibold text-lg">£{calculateSubtotal()}</span>
                   </div>
                 </div>
               </div>
             </div>
-          </form>
-        </div>
-        {/* <div className="flex justify-between mt-6 block sm:hidden fixed bottom-0 bg-gray-200 w-full z-50">
+          </div>
+        </form>
+      </div>
+      {/* <div className="flex justify-between mt-6 block sm:hidden fixed bottom-0 bg-gray-200 w-full z-50">
         <PrevButton label="Back" onClick={() => dispatch(prevStep())} />
         <NextButton label="Proceed to Checkout" disabled={!isValid || !isDoseSelected} />
       </div> */}
-        <div className="fixed bottom-2 w-[95%] mx-auto left-0 right-0 z-50 block sm:hidden">
-          <div className="relative flex justify-between items-center bg-white/30 backdrop-blur-lg rounded-lg py-3 px-6 shadow-lg border border-white/40">
-            {/* Content Layer (to prevent blur on buttons) */}
-            <div className="relative flex w-full justify-between items-center">
-              {/* Back Button */}
-              <button
-                onClick={() => dispatch(prevStep())}
-                className="flex flex-col items-center justify-center text-white rounded-md bg-violet-700 p-3"
-              >
-                <span className="text-md font-semibold px-2">Back</span>
-              </button>
+      <div className="fixed bottom-2 w-[95%] mx-auto left-0 right-0 z-50 block sm:hidden">
+        <div className="relative flex justify-between items-center bg-white/30 backdrop-blur-lg rounded-lg py-3 px-6 shadow-lg border border-white/40">
+          {/* Content Layer (to prevent blur on buttons) */}
+          <div className="relative flex w-full justify-between items-center">
+            {/* Back Button */}
+            <button
+              onClick={() => dispatch(prevStep())}
+              className="flex flex-col items-center justify-center text-white rounded-md bg-violet-700 p-3"
+            >
+              <span className="text-md font-semibold px-2">Back</span>
+            </button>
 
-              {/* Proceed Button */}
-              <button
-                type="submit"
-                onClick={() => dispatch(nextStep())}
-                disabled={!isValid || !isDoseSelected}
-                className={`p-3 flex flex-col items-center justify-center ${
-                  !isValid || !isDoseSelected
-                    ? "disabled:opacity-50 disabled:hover:bg-violet-700 disabled:cursor-not-allowed bg-violet-700 text-white rounded-md"
-                    : "text-white rounded-md bg-violet-700"
-                }`}
-              >
-                <span className="text-md font-semibold">Proceed to Checkout</span>
-              </button>
-            </div>
+            {/* Proceed Button */}
+            <button
+              type="submit"
+              onClick={() => dispatch(nextStep())}
+              disabled={!isValid || !isDoseSelected}
+              className={`p-3 flex flex-col items-center justify-center ${
+                !isValid || !isDoseSelected
+                  ? "disabled:opacity-50 disabled:hover:bg-violet-700 disabled:cursor-not-allowed bg-violet-700 text-white rounded-md"
+                  : "text-white rounded-md bg-violet-700"
+              }`}
+            >
+              <span className="text-md font-semibold">Proceed to Checkout</span>
+            </button>
           </div>
         </div>
-      </section>
-    </StepperWrapper>
+      </div>
+    </section>
   );
 }
