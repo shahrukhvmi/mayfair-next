@@ -1,13 +1,12 @@
-
-
-
-
+export async function getServerSideProps() {
+  return {
+    redirect: {
+      destination: "/step1",
+      permanent: false,
+    },
+  };
+}
 
 export default function Home() {
-  return (
-   <>
-   
-   <h1>jhdedjk</h1>
-   </>
-  );
+  return null;
 }

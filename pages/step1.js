@@ -15,6 +15,7 @@ import dayjs from "dayjs";
 import toast from "react-hot-toast";
 // import { usePostStepsMutation } from "../../store/services/Steps/Steps";
 import NextButton from "@/Components/NextButton/NextButton";
+import StepperWrapper from "@/layout/StepperWrapper";
 // import { useLocation } from "react-router-dom";
 
 const Stepone = () => {
@@ -368,441 +369,442 @@ const Stepone = () => {
   const loader = null;
   const data = null;
   return (
-    <div className="pb-20 sm:pb-0">
-      <div className="text-center">
-        <h1 className="text-2xl lg:text-3xl 2xl:text-4xl font-light">{/* Step 1: <span className="font-bold">Patient Information</span> */}</h1>
+    <StepperWrapper>
+      <div className="pb-20 sm:pb-0 px-12 my-8">
+        <div className="text-center">
+          <h1 className="text-2xl lg:text-3xl 2xl:text-4xl font-light">{/* Step 1: <span className="font-bold">Patient Information</span> */}</h1>
 
-        <p className="text-2xl text-gray-800 mb-3 pb-2 semibold-font">Personal Information</p>
-      </div>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:gap-6 gap-3 pe-0">
-        {/* First Name & Last Name */}
-        <div className="flex gap-4">
-          {/* First Name */}
-          <div className="flex flex-col w-1/2">
-            <InputLabel htmlFor="first-name" className="mb-1 font-medium text-sm text-">
-              First Name <span className="text-red-600">*</span>
-            </InputLabel>
-            <TextField
-              id="first-name"
-              fullWidth
-              variant="outlined"
-              value={watch("firstName") || ""}
-              {...register("firstName", { required: "First name is required" })}
-              error={!!errors.firstName}
-              helperText={errors.firstName?.message}
-              sx={{
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderRadius: 0,
-                },
-                fontSize: "16px",
-              }}
-            />
-          </div>
-
-          {/* Last Name */}
-          <div className="flex flex-col w-1/2">
-            <InputLabel htmlFor="last-name" className="mb-1 font-medium text-sm text-gray-700">
-              Last Name <span className="text-red-600">*</span>
-            </InputLabel>
-            <TextField
-              id="last-name"
-              fullWidth
-              variant="outlined"
-              value={watch("lastName") || ""}
-              {...register("lastName", { required: "Last name is required" })}
-              error={!!errors.lastName}
-              helperText={errors.lastName?.message}
-              sx={{
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderRadius: 0,
-                },
-                fontSize: "16px",
-              }}
-            />
-          </div>
+          <p className="text-2xl text-gray-800 mb-3 pb-2 semibold-font">Personal Information</p>
         </div>
 
-        <div className="mb-3 sm:mb-0">
-          <p className="text-xs text-gray-500 font-medium">Please enter your first and last name exactly as it appears on your ID.</p>
-        </div>
-
-        <div>
-          <p className="font-medium text-md text-gray-700 mb-2">What is your date of birth?*</p>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Controller
-              name="dateOfBirth"
-              control={control}
-              rules={{ required: "Date of birth is required" }}
-              render={({ field }) => (
-                <DatePicker
-                  label=" "
-                  value={field.value ? dayjs(field.value) : null}
-                  onChange={(date) => {
-                    handleDateChange(date);
-                    field.onChange(date);
-                  }}
-                  maxDate={today}
-                  // sx={{ textFieldStyles, marginTop: "0px" }}
-
-                  sx={{
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderRadius: 0,
-                    },
-                    fontSize: "16px",
-                    textFieldStyles,
-                    marginTop: "0px",
-                  }}
-                  slotProps={{
-                    textField: {
-                      variant: "outlined",
-                      fullWidth: true,
-                      error: !!dobError || !!errors.dateOfBirth,
-                      helperText: dobError || errors.dateOfBirth?.message,
-                    },
-                  }}
-                />
-              )}
-            />
-          </LocalizationProvider>
-        </div>
-
-        <div className="w-full my-4">
-          <div className="flex flex-wrap justify-between gap-4">
-            <p className="font-medium text-md text-gray-700 my-auto">
-              What is your gender?<span className="text-red-600">*</span>
-            </p>
-
-            <label
-              className={`px-20 flex items-center gap-2  border-2  py-2 cursor-pointer transition-all duration-300
-    ${gender === "male" ? "bg-primary text-white shadow-sm border-2 border-primary" : "border-2 border-gray-300 bg-white text-gray-700"}`}
-            >
-              <input type="radio" value="male" {...register("gender", { required: "Gender is required" })} className="hidden" />
-              <span className="font-extrabold">Male</span>
-              {/* {gender === "male" && <FaCheck className="ml-1 text-green-500" />} */}
-            </label>
-
-            <label
-              className={`flex items-center gap-2 px-20 border-2 py-2 cursor-pointer transition-all duration-300 
-        ${gender === "female" ? "bg-primary text-white shadow-sm border-2 border-primary" : "border-2 border-gray-300 bg-white text-gray-700"}`}
-            >
-              <input type="radio" value="female" {...register("gender", { required: "Gender is required" })} className="hidden" />
-              <span className="font-extrabold"> Female</span>
-              {/* {gender === "female" && <FaCheck className="ml-1 text-green-500" />} */}
-            </label>
-          </div>
-
-          {errors.gender && <p className="text-red-500 text-sm mt-2">{errors.gender.message}</p>}
-        </div>
-
-        <div className="hidden sm:block">
-          {gender === "female" && (
-            <div className="mb-2">
-              <p className="font-medium text-md text-gray-700 sm:mb-2">Are you breastfeeding or trying to get pregnant?*</p>
-              <div className="flex gap-4">
-                <label
-                  className={`reg-font text-[#3E3E3E] px-10 py-2 border cursor-pointer ${
-                    breastFeeding === "Yes" ? "bg-primary text-white shadow-sm " : "border-2 border-gray-300 bg-white text-gray-700"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    value="Yes"
-                    {...register("breastFeeding", {
-                      required: "This field is required",
-
-                      validate: (value) => {
-                        if (value === "Yes") {
-                          setWarningMessage(
-                            `This treatment is not suitable if you are pregnant, trying to get pregnant or breastfeeding. We recommend you speak to your GP in person.`
-                          );
-                        } else {
-                          setWarningMessage("");
-                        }
-                      },
-                    })}
-                    className="hidden"
-                  />
-                  <span className="font-semibold">Yes</span>{" "}
-                  {/* {breastFeeding === "Yes" && (
-                    <span>
-                      <FaCheck className="ms-2" size={15} />
-                    </span>
-                  )} */}
-                </label>
-
-                <label
-                  className={`reg-font text-[#3E3E3E] px-10 py-2 border cursor-pointer ${
-                    breastFeeding === "No" ? "bg-primary text-white shadow-sm " : "border-2 border-gray-300 bg-white text-gray-700"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    value="No"
-                    {...register("breastFeeding", {
-                      required: "This field is required",
-                    })}
-                    className="hidden"
-                  />
-                  <span className="font-semibold">No</span>
-
-                  {/* {breastFeeding === "No" && (
-                    <span>
-                      <FaCheck className="ms-2" size={15} />
-                    </span>
-                  )} */}
-                </label>
-              </div>
-              <p className="text-red-500 mt-4 text-sm">{WarningMessage?.length > 0 && WarningMessage}</p>
-              {errors.breastFeeding && <p className="text-red-500 mt-2 text-sm">{errors.breastFeeding.message}</p>}
-            </div>
-          )}
-        </div>
-        {/* Phone Number */}
-        <Controller
-          name="phoneNumber"
-          control={control}
-          value={watch("phoneNumber") || ""}
-          rules={{ required: "Phone number is required" }}
-          render={({ field }) => (
-            <div className="w-full">
-              <label htmlFor="" className="font-medium text-md text-gray-700 mb-2 block">
-                Phone Number
-              </label>
-              <PhoneInput
-                country="gb"
-                placeholder="Enter your number"
-                inputStyle={{ width: "100%", height: "50px" }} // Always 100% of wrapper
-                {...field}
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:gap-6 gap-3 pe-0">
+          {/* First Name & Last Name */}
+          <div className="flex gap-4">
+            {/* First Name */}
+            <div className="flex flex-col w-1/2">
+              <InputLabel htmlFor="first-name" className="mb-1 font-medium text-sm text-">
+                First Name <span className="text-red-600">*</span>
+              </InputLabel>
+              <TextField
+                id="first-name"
+                fullWidth
+                variant="outlined"
+                value={watch("firstName") || ""}
+                {...register("firstName", { required: "First name is required" })}
+                error={!!errors.firstName}
+                helperText={errors.firstName?.message}
+                sx={{
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderRadius: 0,
+                  },
+                  fontSize: "16px",
+                }}
               />
             </div>
-          )}
-        />
-        {errors.phoneNumber && (
-          <label htmlFor="" className="text-red-500 text-sm">
-            {errors.phoneNumber.message}
-          </label>
-        )}
 
-        <div className=" mt-3">
-          <h6 className="font-bold text-xl text-black">Residential Address </h6>
-          <p class="text-sm italic text-green-600  pt-1 pb-4">(Require for age verification purpose)</p>
-        </div>
+            {/* Last Name */}
+            <div className="flex flex-col w-1/2">
+              <InputLabel htmlFor="last-name" className="mb-1 font-medium text-sm text-gray-700">
+                Last Name <span className="text-red-600">*</span>
+              </InputLabel>
+              <TextField
+                id="last-name"
+                fullWidth
+                variant="outlined"
+                value={watch("lastName") || ""}
+                {...register("lastName", { required: "Last name is required" })}
+                error={!!errors.lastName}
+                helperText={errors.lastName?.message}
+                sx={{
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderRadius: 0,
+                  },
+                  fontSize: "16px",
+                }}
+              />
+            </div>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 sm:gap-4 gap-0">
-          <TextField
-            label="Postal Code"
-            variant="standard"
-            value={zipCode}
-            sx={textFieldStyles}
-            className="reg-font"
-            {...register("postCode", { required: "Postal Code is required" })}
-            // error={!!errors.postCode || error} // Displays error state
-            helperText={errors.postCode?.message} // Shows error message
-            fullWidth
-            onChange={(e) => {
-              setZipCode(e.target.value);
-              setSearchClicked(false);
-            }}
-            InputProps={{
-              endAdornment: (
-                <>
-                  <div className="relative -top-2">
-                    <button
-                      type="button"
-                      onClick={handleSearch}
-                      disabled={btnZipCode}
-                      className="w-fit disabled:opacity-50 disabled:bg-gray-400 disabled:cursor-not-allowed bg-primary hover:bg-primary transition-all duration-200 py-2 px-4 mt-2 ms-2 flex text-white items-center gap-1"
-                    >
-                      <FaSearch className={`text-white`} />
-                      {/* <span className="mr-2 text-sm">{isLoading ? "SEARCH..." : "SEARCH"}</span> */}
-                    </button>
-                  </div>
-                </>
-              ),
-            }}
-          />
+          <div className="mb-3 sm:mb-0">
+            <p className="text-xs text-gray-500 font-medium">Please enter your first and last name exactly as it appears on your ID.</p>
+          </div>
 
-          <div className="mt-3 sm:mt-0">
-            {!error && searchClicked && addressOptions.length > 0 && (
-              <div className="">
-                <FormControl fullWidth variant="outlined" error={!!errors.addressSelect} sx={selectStyles}>
-                  <InputLabel>Select Autofill</InputLabel>
-                  <Select
-                    variant="standard"
-                    {...register("addressSelect", {
-                      required: "Please select an address",
-                    })} // Validation for Select
-                    onChange={(e) => handleSelect(e.target.value, setValue)}
-                    defaultValue=""
+          <div>
+            <p className="font-medium text-md text-gray-700 mb-2">What is your date of birth?*</p>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Controller
+                name="dateOfBirth"
+                control={control}
+                rules={{ required: "Date of birth is required" }}
+                render={({ field }) => (
+                  <DatePicker
+                    label=" "
+                    value={field.value ? dayjs(field.value) : null}
+                    onChange={(date) => {
+                      handleDateChange(date);
+                      field.onChange(date);
+                    }}
+                    maxDate={today}
+                    // sx={{ textFieldStyles, marginTop: "0px" }}
+
+                    sx={{
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderRadius: 0,
+                      },
+                      fontSize: "16px",
+                      textFieldStyles,
+                      marginTop: "0px",
+                    }}
+                    slotProps={{
+                      textField: {
+                        variant: "outlined",
+                        fullWidth: true,
+                        error: !!dobError || !!errors.dateOfBirth,
+                        helperText: dobError || errors.dateOfBirth?.message,
+                      },
+                    }}
+                  />
+                )}
+              />
+            </LocalizationProvider>
+          </div>
+
+          <div className="w-full my-4">
+            <div className="flex flex-wrap justify-between gap-4">
+              <p className="font-medium text-md text-gray-700 my-auto">
+                What is your gender?<span className="text-red-600">*</span>
+              </p>
+
+              <label
+                className={`px-20 flex items-center gap-2  border-2  py-2 cursor-pointer transition-all duration-300
+    ${gender === "male" ? "bg-primary text-white shadow-sm border-2 border-primary" : "border-2 border-gray-300 bg-white text-gray-700"}`}
+              >
+                <input type="radio" value="male" {...register("gender", { required: "Gender is required" })} className="hidden" />
+                <span className="font-extrabold">Male</span>
+                {/* {gender === "male" && <FaCheck className="ml-1 text-green-500" />} */}
+              </label>
+
+              <label
+                className={`flex items-center gap-2 px-20 border-2 py-2 cursor-pointer transition-all duration-300 
+        ${gender === "female" ? "bg-primary text-white shadow-sm border-2 border-primary" : "border-2 border-gray-300 bg-white text-gray-700"}`}
+              >
+                <input type="radio" value="female" {...register("gender", { required: "Gender is required" })} className="hidden" />
+                <span className="font-extrabold"> Female</span>
+                {/* {gender === "female" && <FaCheck className="ml-1 text-green-500" />} */}
+              </label>
+            </div>
+
+            {errors.gender && <p className="text-red-500 text-sm mt-2">{errors.gender.message}</p>}
+          </div>
+
+          <div className="hidden sm:block">
+            {gender === "female" && (
+              <div className="mb-2">
+                <p className="font-medium text-md text-gray-700 sm:mb-2">Are you breastfeeding or trying to get pregnant?*</p>
+                <div className="flex gap-4">
+                  <label
+                    className={`reg-font text-[#3E3E3E] px-10 py-2 border cursor-pointer ${
+                      breastFeeding === "Yes" ? "bg-primary text-white shadow-sm " : "border-2 border-gray-300 bg-white text-gray-700"
+                    }`}
                   >
-                    {addressOptions.map((address, index) => (
-                      <MenuItem key={index} value={index}>
-                        {`${address.line_1}, ${address.town_or_city}`}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.addressSelect && (
-                    <FormHelperText>{errors.addressSelect.message}</FormHelperText> // Display error message
-                  )}
-                </FormControl>
+                    <input
+                      type="radio"
+                      value="Yes"
+                      {...register("breastFeeding", {
+                        required: "This field is required",
+
+                        validate: (value) => {
+                          if (value === "Yes") {
+                            setWarningMessage(
+                              `This treatment is not suitable if you are pregnant, trying to get pregnant or breastfeeding. We recommend you speak to your GP in person.`
+                            );
+                          } else {
+                            setWarningMessage("");
+                          }
+                        },
+                      })}
+                      className="hidden"
+                    />
+                    <span className="font-semibold">Yes</span>{" "}
+                    {/* {breastFeeding === "Yes" && (
+                    <span>
+                      <FaCheck className="ms-2" size={15} />
+                    </span>
+                  )} */}
+                  </label>
+
+                  <label
+                    className={`reg-font text-[#3E3E3E] px-10 py-2 border cursor-pointer ${
+                      breastFeeding === "No" ? "bg-primary text-white shadow-sm " : "border-2 border-gray-300 bg-white text-gray-700"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      value="No"
+                      {...register("breastFeeding", {
+                        required: "This field is required",
+                      })}
+                      className="hidden"
+                    />
+                    <span className="font-semibold">No</span>
+
+                    {/* {breastFeeding === "No" && (
+                    <span>
+                      <FaCheck className="ms-2" size={15} />
+                    </span>
+                  )} */}
+                  </label>
+                </div>
+                <p className="text-red-500 mt-4 text-sm">{WarningMessage?.length > 0 && WarningMessage}</p>
+                {errors.breastFeeding && <p className="text-red-500 mt-2 text-sm">{errors.breastFeeding.message}</p>}
               </div>
             )}
           </div>
-        </div>
-
-        {/* Address Dropdown - Show only after clicking Search */}
-
-        {/* Address Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700 mb-1">
-              Address Line 1<span className="text-red-500">*</span>
-            </label>
-            <TextField
-              id="streetAddress"
-              variant="outlined"
-              fullWidth
-              placeholder="Enter address line 1"
-              value={watch("streetAddress") || ""}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 0, // 👈 removes border radius
-                },
-                ...textFieldStyles, // apply your custom styles
-              }}
-              {...register("streetAddress", {
-                required: "Address Line 1 is required",
-              })}
-              error={!!errors.streetAddress}
-              helperText={errors.streetAddress?.message}
-              InputLabelProps={{ shrink: false }}
-              label="" // Hide built-in label
-            />
-          </div>
-
-          <div>
-            <label htmlFor="streetAddress2" className="block text-sm font-medium text-gray-700 mb-1">
-              Address Line 2
-            </label>
-            <TextField
-              id="streetAddress2"
-              variant="outlined"
-              fullWidth
-              placeholder="Enter address line 2"
-              value={watch("streetAddress2") || ""}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 0, // 👈 removes border radius
-                },
-                ...textFieldStyles, // apply your custom styles
-              }}
-              {...register("streetAddress2")}
-              InputLabelProps={{ shrink: false }}
-              label="" // Hide built-in label
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          {/* City */}
-          <div>
-            <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
-              City<span className="text-red-500">*</span>
-            </label>
-            <TextField
-              id="city"
-              placeholder="Enter city"
-              variant="outlined"
-              fullWidth
-              value={watch("city") || ""}
-              {...register("city", { required: "City is required" })}
-              error={!!errors.city}
-              helperText={errors.city?.message}
-              label="" // Hide built-in label
-              InputLabelProps={{ shrink: false }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 0, // 👈 removes border radius
-                },
-                ...textFieldStyles, // apply your custom styles
-              }}
-            />
-          </div>
-
-          {/* State */}
-          <div>
-            <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-1">
-              State / Province / Region
-            </label>
-            <TextField
-              id="state"
-              placeholder="Enter state"
-              variant="outlined"
-              fullWidth
-              value={watch("state") || ""}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 0, // 👈 removes border radius
-                },
-                ...textFieldStyles, // apply your custom styles
-              }}
-              {...register("state")}
-              label="" // Hide built-in label
-              InputLabelProps={{ shrink: false }}
-              error={!!errors.state}
-              helperText={errors.state?.message}
-            />
-          </div>
-        </div>
-
-        {/* Ethnicity Selection */}
-
-        <div>
-          <h6 className="font-bold text-xl text-black my-6">Confirm Ethnicity for BMI</h6>
-          <p className="font-med text-md text-gray pb-3 font-bold">
-            People of certain ethnicities may be suitable for treatment at a lower BMI than others, if appropriate. Does one of the following options
-            describe your ethnic group or background?
-          </p>
-          <ul className="list-disc ms-5 my-5">
-            <li className="my-1 font-reg text-gray-800">South Asian</li>
-            <li className="my-1 font-reg text-gray-800">Chinese</li>
-            <li className="my-1 font-reg text-gray-800">Other Asian</li>
-            <li className="my-1 font-reg text-gray-800"> Middle Eastern</li>
-            <li className="my-1 font-reg text-gray-800">Black African</li>
-            <li className="my-1 font-reg text-gray-800">African-Caribbean</li>
-          </ul>
-
-          <div className="sm:w-3/3">
-            {[
-              { value: "yes", label: "Yes" },
-              { value: "no", label: "No" },
-              { value: "prefer not to say", label: "Prefer not to say" },
-            ].map((option) => (
-              <label
-                key={option.value}
-                className={`flex justify-center items-center mt-2 px-6 py-2 border-2 border-primary  cursor-pointer transition-all duration-300 min-w-[150px] ${
-                  selectedEthnicity === option.value ? "bg-primary text-white" : "bg-white text-gray-700 border-2"
-                }`}
-              >
-                <input
-                  type="radio"
-                  value={option.value}
-                  {...register("ethnicity", {
-                    required: "Ethnicity is required",
-                  })}
-                  className="hidden "
+          {/* Phone Number */}
+          <Controller
+            name="phoneNumber"
+            control={control}
+            value={watch("phoneNumber") || ""}
+            rules={{ required: "Phone number is required" }}
+            render={({ field }) => (
+              <div className="w-full">
+                <label htmlFor="" className="font-medium text-md text-gray-700 mb-2 block">
+                  Phone Number
+                </label>
+                <PhoneInput
+                  country="gb"
+                  placeholder="Enter your number"
+                  inputStyle={{ width: "100%", height: "50px" }} // Always 100% of wrapper
+                  {...field}
                 />
-                <span>{option.label}</span>
-                {/* {selectedEthnicity === option.value && <FaCheck className="text-green-500 ml-auto" />} */}
-              </label>
-            ))}
+              </div>
+            )}
+          />
+          {errors.phoneNumber && (
+            <label htmlFor="" className="text-red-500 text-sm">
+              {errors.phoneNumber.message}
+            </label>
+          )}
+
+          <div className=" mt-3">
+            <h6 className="font-bold text-xl text-black">Residential Address </h6>
+            <p class="text-sm italic text-green-600  pt-1 pb-4">(Require for age verification purpose)</p>
           </div>
 
-          {errors.ethnicity && <p className="text-red-500 mt-1">{errors.ethnicity.message}</p>}
-        </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 sm:gap-4 gap-0">
+            <TextField
+              label="Postal Code"
+              variant="standard"
+              value={zipCode}
+              sx={textFieldStyles}
+              className="reg-font"
+              {...register("postCode", { required: "Postal Code is required" })}
+              // error={!!errors.postCode || error} // Displays error state
+              helperText={errors.postCode?.message} // Shows error message
+              fullWidth
+              onChange={(e) => {
+                setZipCode(e.target.value);
+                setSearchClicked(false);
+              }}
+              InputProps={{
+                endAdornment: (
+                  <>
+                    <div className="relative -top-2">
+                      <button
+                        type="button"
+                        onClick={handleSearch}
+                        disabled={btnZipCode}
+                        className="w-fit disabled:opacity-50 disabled:bg-gray-400 disabled:cursor-not-allowed bg-primary hover:bg-primary transition-all duration-200 py-2 px-4 mt-2 ms-2 flex text-white items-center gap-1"
+                      >
+                        <FaSearch className={`text-white`} />
+                        {/* <span className="mr-2 text-sm">{isLoading ? "SEARCH..." : "SEARCH"}</span> */}
+                      </button>
+                    </div>
+                  </>
+                ),
+              }}
+            />
 
-        {/* <div className="flex justify-end">
+            <div className="mt-3 sm:mt-0">
+              {!error && searchClicked && addressOptions.length > 0 && (
+                <div className="">
+                  <FormControl fullWidth variant="outlined" error={!!errors.addressSelect} sx={selectStyles}>
+                    <InputLabel>Select Autofill</InputLabel>
+                    <Select
+                      variant="standard"
+                      {...register("addressSelect", {
+                        required: "Please select an address",
+                      })} // Validation for Select
+                      onChange={(e) => handleSelect(e.target.value, setValue)}
+                      defaultValue=""
+                    >
+                      {addressOptions.map((address, index) => (
+                        <MenuItem key={index} value={index}>
+                          {`${address.line_1}, ${address.town_or_city}`}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.addressSelect && (
+                      <FormHelperText>{errors.addressSelect.message}</FormHelperText> // Display error message
+                    )}
+                  </FormControl>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Address Dropdown - Show only after clicking Search */}
+
+          {/* Address Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div>
+              <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700 mb-1">
+                Address Line 1<span className="text-red-500">*</span>
+              </label>
+              <TextField
+                id="streetAddress"
+                variant="outlined"
+                fullWidth
+                placeholder="Enter address line 1"
+                value={watch("streetAddress") || ""}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 0, // 👈 removes border radius
+                  },
+                  ...textFieldStyles, // apply your custom styles
+                }}
+                {...register("streetAddress", {
+                  required: "Address Line 1 is required",
+                })}
+                error={!!errors.streetAddress}
+                helperText={errors.streetAddress?.message}
+                InputLabelProps={{ shrink: false }}
+                label="" // Hide built-in label
+              />
+            </div>
+
+            <div>
+              <label htmlFor="streetAddress2" className="block text-sm font-medium text-gray-700 mb-1">
+                Address Line 2
+              </label>
+              <TextField
+                id="streetAddress2"
+                variant="outlined"
+                fullWidth
+                placeholder="Enter address line 2"
+                value={watch("streetAddress2") || ""}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 0, // 👈 removes border radius
+                  },
+                  ...textFieldStyles, // apply your custom styles
+                }}
+                {...register("streetAddress2")}
+                InputLabelProps={{ shrink: false }}
+                label="" // Hide built-in label
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            {/* City */}
+            <div>
+              <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
+                City<span className="text-red-500">*</span>
+              </label>
+              <TextField
+                id="city"
+                placeholder="Enter city"
+                variant="outlined"
+                fullWidth
+                value={watch("city") || ""}
+                {...register("city", { required: "City is required" })}
+                error={!!errors.city}
+                helperText={errors.city?.message}
+                label="" // Hide built-in label
+                InputLabelProps={{ shrink: false }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 0, // 👈 removes border radius
+                  },
+                  ...textFieldStyles, // apply your custom styles
+                }}
+              />
+            </div>
+
+            {/* State */}
+            <div>
+              <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-1">
+                State / Province / Region
+              </label>
+              <TextField
+                id="state"
+                placeholder="Enter state"
+                variant="outlined"
+                fullWidth
+                value={watch("state") || ""}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 0, // 👈 removes border radius
+                  },
+                  ...textFieldStyles, // apply your custom styles
+                }}
+                {...register("state")}
+                label="" // Hide built-in label
+                InputLabelProps={{ shrink: false }}
+                error={!!errors.state}
+                helperText={errors.state?.message}
+              />
+            </div>
+          </div>
+
+          {/* Ethnicity Selection */}
+
+          <div>
+            <h6 className="font-bold text-xl text-black my-6">Confirm Ethnicity for BMI</h6>
+            <p className="font-med text-md text-gray pb-3 font-bold">
+              People of certain ethnicities may be suitable for treatment at a lower BMI than others, if appropriate. Does one of the following
+              options describe your ethnic group or background?
+            </p>
+            <ul className="list-disc ms-5 my-5">
+              <li className="my-1 font-reg text-gray-800">South Asian</li>
+              <li className="my-1 font-reg text-gray-800">Chinese</li>
+              <li className="my-1 font-reg text-gray-800">Other Asian</li>
+              <li className="my-1 font-reg text-gray-800"> Middle Eastern</li>
+              <li className="my-1 font-reg text-gray-800">Black African</li>
+              <li className="my-1 font-reg text-gray-800">African-Caribbean</li>
+            </ul>
+
+            <div className="sm:w-3/3">
+              {[
+                { value: "yes", label: "Yes" },
+                { value: "no", label: "No" },
+                { value: "prefer not to say", label: "Prefer not to say" },
+              ].map((option) => (
+                <label
+                  key={option.value}
+                  className={`flex justify-center items-center mt-2 px-6 py-2 border-2 border-primary  cursor-pointer transition-all duration-300 min-w-[150px] ${
+                    selectedEthnicity === option.value ? "bg-primary text-white" : "bg-white text-gray-700 border-2"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    value={option.value}
+                    {...register("ethnicity", {
+                      required: "Ethnicity is required",
+                    })}
+                    className="hidden "
+                  />
+                  <span>{option.label}</span>
+                  {/* {selectedEthnicity === option.value && <FaCheck className="text-green-500 ml-auto" />} */}
+                </label>
+              ))}
+            </div>
+
+            {errors.ethnicity && <p className="text-red-500 mt-1">{errors.ethnicity.message}</p>}
+          </div>
+
+          {/* <div className="flex justify-end">
           <div className="mt-4 sm:max-w-40">
             <div className="text-center my-3">
               <button
@@ -819,45 +821,46 @@ const Stepone = () => {
           </div>
         </div> */}
 
-        <div className="hidden justify-start sm:flex">
-          <div className="mt-2 sm:max-w-40">
-            <div className="text-center">
-              <NextButton
-                disabled={!isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError}
-                label={"Next"}
-                loading={loader}
-              />
+          <div className="hidden justify-start sm:flex">
+            <div className="mt-2 sm:max-w-40">
+              <div className="text-center">
+                <NextButton
+                  disabled={!isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError}
+                  label={"Next"}
+                  loading={loader}
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="fixed bottom-2 w-[95%] mx-auto left-0 right-0 z-50 block sm:hidden">
-          <div className="relative flex justify-between items-center bg-white/30 backdrop-blur-lg rounded-lg py-3 px-6 shadow-lg border border-white/40">
-            <div className="relative flex w-full justify-end items-center">
-              <button
-                type="submit"
-                disabled={!isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError}
-                className={`p-3 flex flex-col items-center justify-center ${
-                  !isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError
-                    ? "disabled:opacity-50 disabled:hover:bg-primary disabled:cursor-not-allowed bg-primary text-white rounded-md"
-                    : "text-white rounded-md bg-primary"
-                }`}
-              >
-                {loader ? (
-                  // Loading Spinner with Label
-                  <div className="flex items-center space-x-2">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span></span>
-                  </div>
-                ) : (
-                  <span className="text-md font-semibold px-6">Next</span>
-                )}
-              </button>
+          <div className="fixed bottom-2 w-[95%] mx-auto left-0 right-0 z-50 block sm:hidden">
+            <div className="relative flex justify-between items-center bg-white/30 backdrop-blur-lg rounded-lg py-3 px-6 shadow-lg border border-white/40">
+              <div className="relative flex w-full justify-end items-center">
+                <button
+                  type="submit"
+                  disabled={!isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError}
+                  className={`p-3 flex flex-col items-center justify-center ${
+                    !isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError
+                      ? "disabled:opacity-50 disabled:hover:bg-primary disabled:cursor-not-allowed bg-primary text-white rounded-md"
+                      : "text-white rounded-md bg-primary"
+                  }`}
+                >
+                  {loader ? (
+                    // Loading Spinner with Label
+                    <div className="flex items-center space-x-2">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span></span>
+                    </div>
+                  ) : (
+                    <span className="text-md font-semibold px-6">Next</span>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </StepperWrapper>
   );
 };
 
