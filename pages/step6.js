@@ -1,7 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect,  useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { nextStep, prevStep } from "../../store/slice/stepper";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import NextButton from "@/Components/NextButton/NextButton";
 import BackButton from "@/Components/BackButton/BackButton";
 import dayjs from "dayjs";
@@ -13,7 +11,7 @@ function Step6() {
   useEffect(() => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // You can change to "auto" for instant scrolling
+      behavior: "smooth", 
     });
   }, []);
   const step1Data = useSelector((state) => state.steps.step1);

@@ -1,19 +1,15 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { TextField, Button, Box, Typography, FormControlLabel, Checkbox } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-// import { nextStep, prevStep, triggerStep } from "../../store/slice/stepper";
-// import { usePostStepsMutation } from "../../store/services/Steps/Steps";
-import toast from "react-hot-toast";
 import { setStep2 } from "@/store/steps";
 import NextButton from "@/Components/NextButton/NextButton";
-import BackButton from "@/Components/BackButton/BackButton";
-// import PrevButton from "../PrevBtn/PrevButton";
+import BackButton from "@/Components/BackButton/BackButton"; 
 import { BsInfoCircle } from "react-icons/bs";
 import StepperWrapper from "@/layout/StepperWrapper";
 import { useRouter } from "next/router";
 
- function Step2() {
+function Step2() {
   const router = useRouter();
   const step2Data = useSelector((state) => state.steps.step2);
 
@@ -127,8 +123,8 @@ import { useRouter } from "next/router";
         "weight_related_comorbidity",
         checked
           ? [
-              "You have at least one weight-related comorbidity (e.g. PCOS, diabetes, pre-diabetes, high cholesterol, hypertension, sleep apnoea, osteoarthritis etc.)",
-            ]
+            "You have at least one weight-related comorbidity (e.g. PCOS, diabetes, pre-diabetes, high cholesterol, hypertension, sleep apnoea, osteoarthritis etc.)",
+          ]
           : ""
       );
     }
@@ -476,11 +472,10 @@ import { useRouter } from "next/router";
                 {/* Imperial Button */}
                 <Box
                   onClick={() => handleUnitChange("imperial")}
-                  className={`sm:w-3/4   w-32 cursor-pointer flex items-center justify-between px-6 py-3 rounded-lg transition duration-300 shadow-md ${
-                    unit === "imperial"
+                  className={`sm:w-3/4   w-32 cursor-pointer flex items-center justify-between px-6 py-3 rounded-lg transition duration-300 shadow-md ${unit === "imperial"
                       ? "border-2 border-green-500 bg-green-50 text-green-600 shadow-lg"
                       : "border border-gray-100 bg-white text-gray-800 hover:shadow"
-                  }`}
+                    }`}
                 >
                   <span className="text-sm font-bold">IMPERIAL</span>
                   {unit === "imperial" && (
@@ -495,11 +490,10 @@ import { useRouter } from "next/router";
                 {/* Metric Button */}
                 <Box
                   onClick={() => handleUnitChange("metrics")}
-                  className={`sm:w-3/4 w-32 cursor-pointer flex items-center justify-between px-6 py-3 rounded-lg transition duration-300 shadow-md ${
-                    unit === "metrics"
+                  className={`sm:w-3/4 w-32 cursor-pointer flex items-center justify-between px-6 py-3 rounded-lg transition duration-300 shadow-md ${unit === "metrics"
                       ? "border-2 border-green-500 bg-green-50 text-green-600 shadow-lg"
                       : "border border-gray-300 bg-white text-gray-800 hover:shadow"
-                  }`}
+                    }`}
                 >
                   <span className="text-sm font-bold">METRICS</span>
                   {unit === "metrics" && (
@@ -1067,27 +1061,26 @@ import { useRouter } from "next/router";
 
               <div className="block sm:hidden">
                 <div
-                  className={`mt-2 text-center bg-gray-100 p-8 w-full rounded-md transition-colors duration-300 ease-in-out select-none ${
-                    lastConsultation?.isReturning
+                  className={`mt-2 text-center bg-gray-100 p-8 w-full rounded-md transition-colors duration-300 ease-in-out select-none ${lastConsultation?.isReturning
                       ? bmi == 0
                         ? "bg-gray-100"
                         : bmi < 18.5
-                        ? "bg-red-300"
-                        : bmi > 18.5 && bmi <= 26.9
-                        ? "bg-yellow-100"
-                        : bmi > 26.9 && bmi <= 30
-                        ? "bg-green-300"
-                        : "bg-[#4DB581]"
+                          ? "bg-red-300"
+                          : bmi > 18.5 && bmi <= 26.9
+                            ? "bg-yellow-100"
+                            : bmi > 26.9 && bmi <= 30
+                              ? "bg-green-300"
+                              : "bg-[#4DB581]"
                       : bmi == 0
-                      ? "bg-gray-100"
-                      : bmi < 30
-                      ? "bg-red-300"
-                      : bmi >= 30
-                      ? "bg-yellow-100"
-                      : bmi > 27 && bmi <= 29.9
-                      ? "bg-green-300"
-                      : "bg-[#4DB581]"
-                  }`}
+                        ? "bg-gray-100"
+                        : bmi < 30
+                          ? "bg-red-300"
+                          : bmi >= 30
+                            ? "bg-yellow-100"
+                            : bmi > 27 && bmi <= 29.9
+                              ? "bg-green-300"
+                              : "bg-[#4DB581]"
+                    }`}
                 >
                   <div className="bmi-value | font-semibold text-lg">BMI Value</div>
                   <p className="text-4xl text-black font-semibold">{parseFloat(bmi).toFixed(1)}</p>
@@ -1138,11 +1131,10 @@ import { useRouter } from "next/router";
                     <button
                       type="submit"
                       disabled={errorMessage || !isValid || (showCheckBox && !isAtLeastOneCheckboxValid())}
-                      className={`p-3 flex flex-col items-center justify-center ${
-                        errorMessage || !isValid || (showCheckBox && !isAtLeastOneCheckboxValid())
+                      className={`p-3 flex flex-col items-center justify-center ${errorMessage || !isValid || (showCheckBox && !isAtLeastOneCheckboxValid())
                           ? "disabled:opacity-50 disabled:hover:bg-violet-700 disabled:cursor-not-allowed bg-violet-700 rounded-md"
                           : " rounded-md bg-violet-700"
-                      }`}
+                        }`}
                     >
                       <span className="text-md font-semibold px-6">Next</span>
                     </button>
@@ -1155,27 +1147,26 @@ import { useRouter } from "next/router";
             <div className="right | w-full lg:w-full">
               <div className="hidden sm:block">
                 <div
-                  className={`ml-8 text-center bg-gray-100 p-8 w-full rounded-md transition-colors duration-300 ease-in-out select-none ${
-                    lastConsultation?.isReturning
+                  className={`ml-8 text-center bg-gray-100 p-8 w-full rounded-md transition-colors duration-300 ease-in-out select-none ${lastConsultation?.isReturning
                       ? bmi == 0
                         ? "bg-gray-100"
                         : bmi < 18.5
-                        ? "bg-red-300"
-                        : bmi > 18.5 && bmi <= 26.9
-                        ? "bg-yellow-100"
-                        : bmi > 26.9 && bmi <= 30
-                        ? "bg-green-300"
-                        : "bg-[#4DB581]"
+                          ? "bg-red-300"
+                          : bmi > 18.5 && bmi <= 26.9
+                            ? "bg-yellow-100"
+                            : bmi > 26.9 && bmi <= 30
+                              ? "bg-green-300"
+                              : "bg-[#4DB581]"
                       : bmi == 0
-                      ? "bg-gray-100"
-                      : bmi < 30
-                      ? "bg-red-300"
-                      : bmi >= 30
-                      ? "bg-yellow-100"
-                      : bmi > 27 && bmi <= 29.9
-                      ? "bg-green-300"
-                      : "bg-[#4DB581]"
-                  }`}
+                        ? "bg-gray-100"
+                        : bmi < 30
+                          ? "bg-red-300"
+                          : bmi >= 30
+                            ? "bg-yellow-100"
+                            : bmi > 27 && bmi <= 29.9
+                              ? "bg-green-300"
+                              : "bg-[#4DB581]"
+                    }`}
                 >
                   <div className="bmi-value | font-semibold text-lg">BMI Value</div>
                   <p className="text-4xl text-black font-semibold">{parseFloat(bmi).toFixed(1)}</p>
@@ -1207,7 +1198,7 @@ import { useRouter } from "next/router";
                 <>
                   <div
                     id="alert-border-4"
-                    className="flex items-center p-4 mb-4 text-red-600 border-t-4 bg-red-50  border-red-600 rounded-md mb-30 w-full ml-8"
+                    className="flex items-center p-4 text-red-600 border-t-4 bg-red-50  border-red-600 rounded-md mb-30 w-full ml-8"
                     role="alert"
                   >
                     <div className="ms-3 text-sm font-medium">
