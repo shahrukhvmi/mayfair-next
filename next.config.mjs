@@ -1,18 +1,13 @@
-// next.config.mjs
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // ✅ tells Next.js to generate /out on build
-  trailingSlash: true, // (optional) for proper folder-based routing
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/step1',
-        permanent: false,
-      },
-    ];
+  output: "export",
+  reactStrictMode: false,
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
-
 export default nextConfig;
