@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import StepperWrapper from "@/layout/StepperWrapper";
 import { useRouter } from "next/router";
 
-function Step6() {
+const Step6 = () => {
   const router = useRouter();
   useEffect(() => {
     window.scrollTo({

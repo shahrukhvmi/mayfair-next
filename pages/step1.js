@@ -22,7 +22,7 @@ import { useGetQuestionsQuery } from "@/store/questionsApi";
 
 // import { useLocation } from "react-router-dom";
 
-function Step1 {
+const Step1 = () => {
   const dispatch = useDispatch();
 
   const { data } = useGetQuestionsQuery();
@@ -522,9 +522,8 @@ function Step1 {
                 <p className="font-medium text-md text-gray-700 sm:mb-2">Are you breastfeeding or trying to get pregnant?*</p>
                 <div className="flex gap-4">
                   <label
-                    className={`reg-font text-[#3E3E3E] px-10 py-2 border cursor-pointer ${
-                      breastFeeding === "Yes" ? "bg-primary text-white shadow-sm " : "border-2 border-gray-300 bg-white text-gray-700"
-                    }`}
+                    className={`reg-font text-[#3E3E3E] px-10 py-2 border cursor-pointer ${breastFeeding === "Yes" ? "bg-primary text-white shadow-sm " : "border-2 border-gray-300 bg-white text-gray-700"
+                      }`}
                   >
                     <input
                       type="radio"
@@ -553,9 +552,8 @@ function Step1 {
                   </label>
 
                   <label
-                    className={`reg-font text-[#3E3E3E] px-10 py-2 border cursor-pointer ${
-                      breastFeeding === "No" ? "bg-primary text-white shadow-sm " : "border-2 border-gray-300 bg-white text-gray-700"
-                    }`}
+                    className={`reg-font text-[#3E3E3E] px-10 py-2 border cursor-pointer ${breastFeeding === "No" ? "bg-primary text-white shadow-sm " : "border-2 border-gray-300 bg-white text-gray-700"
+                      }`}
                   >
                     <input
                       type="radio"
@@ -802,9 +800,8 @@ function Step1 {
               ].map((option) => (
                 <label
                   key={option.value}
-                  className={`flex justify-center items-center mt-2 px-6 py-2 border-2 border-primary  cursor-pointer transition-all duration-300 min-w-[150px] ${
-                    selectedEthnicity === option.value ? "bg-primary text-white" : "bg-white text-gray-700 border-2"
-                  }`}
+                  className={`flex justify-center items-center mt-2 px-6 py-2 border-2 border-primary  cursor-pointer transition-all duration-300 min-w-[150px] ${selectedEthnicity === option.value ? "bg-primary text-white" : "bg-white text-gray-700 border-2"
+                    }`}
                 >
                   <input
                     type="radio"
@@ -847,11 +844,10 @@ function Step1 {
                   onClick={handleNextBtn}
                   type="submit"
                   disabled={!isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError}
-                  className={`text-white px-9 py-2 rounded-md font-medium transition-all duration-150 ease-in ${
-                    !isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError
-                      ? "disabled:opacity-50 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                      : "text-white rounded-md bg-primary bg-violet-700"
-                  }`}
+                  className={`text-white px-9 py-2 rounded-md font-medium transition-all duration-150 ease-in ${!isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError
+                    ? "disabled:opacity-50 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    : "text-white rounded-md bg-primary bg-violet-700"
+                    }`}
                 >
                   {loader ? (
                     // Loading Spinner with Label
@@ -873,11 +869,10 @@ function Step1 {
                 <button
                   type="submit"
                   disabled={!isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError}
-                  className={`p-3 flex flex-col items-center justify-center ${
-                    !isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError
-                      ? "disabled:opacity-50 disabled:hover:bg-primary disabled:cursor-not-allowed bg-primary text-white rounded-md"
-                      : "text-white rounded-md bg-primary"
-                  }`}
+                  className={`p-3 flex flex-col items-center justify-center ${!isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError
+                    ? "disabled:opacity-50 disabled:hover:bg-primary disabled:cursor-not-allowed bg-primary text-white rounded-md"
+                    : "text-white rounded-md bg-primary"
+                    }`}
                 >
                   {loader ? (
                     // Loading Spinner with Label

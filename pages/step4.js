@@ -13,7 +13,7 @@ import StepperWrapper from "@/layout/StepperWrapper";
 import { useRouter } from "next/router";
 import { setStep4 } from "@/store/steps";
 
-function Step4() {
+const Step4 = () => {
   const router = useRouter();
   useEffect(() => {
     window.scrollTo({

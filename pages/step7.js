@@ -20,7 +20,7 @@ import OrderSummaryAddons from "@/Components/AddonList/OrderSummaryAddons";
 import DosageCheckPopup from "@/Components/DosageCheckPopup/DosageCheckPopup";
 import StepperWrapper from "@/layout/StepperWrapper";
 
-function Step6() {
+const Step7 = () => {
   useEffect(() => {
     window.scrollTo({
       top: 0,

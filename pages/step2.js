@@ -9,7 +9,7 @@ import { BsInfoCircle } from "react-icons/bs";
 import StepperWrapper from "@/layout/StepperWrapper";
 import { useRouter } from "next/router";
 
-function Step2() {
+  const Step2 = () => {
   const router = useRouter();
   const step2Data = useSelector((state) => state.steps.step2);
 

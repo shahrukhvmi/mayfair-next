@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import { setStep5 } from "@/store/steps";
 // import { setStep5 } from "../../store/slice/stepSlice";
 
-function Step5() {
+const Step5 = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const step5Data = useSelector((state) => state.steps.step5);
