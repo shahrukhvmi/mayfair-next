@@ -1,19 +1,13 @@
-import DashBoardLayout from '@/layout/Dashboard/dashBoardLayout'
-import React from 'react'
+import React from 'react';
+import MyAccount from '@/Components/MyAccount/MyAccount';
+import DashBoardLayout from '@/layout/Dashboard/dashBoardLayout';
 
-const dashboard = () => {
+const Dashboard = () => {
     return (
-        <>
+        <DashBoardLayout element={<MyAccount />} />
 
 
-            <DashBoardLayout>
+    );
+};
 
-
-
-            </DashBoardLayout>
-
-        </>
-    )
-}
-
-export default dashboard
+export default Dashboard;

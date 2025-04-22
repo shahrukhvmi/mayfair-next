@@ -5,11 +5,13 @@ import storage from "redux-persist/lib/storage";
 
 import stepReducer from "./steps"; // Your step slice
 import { questionsApi } from "./questionsApi";
+import { dashboardApi } from "@/store/dashboardApi"
 
 // Combine all reducers
 const rootReducer = combineReducers({
   steps: stepReducer, // Form steps
-  [questionsApi.reducerPath]: questionsApi.reducer, // RTK Query API slice
+  [questionsApi.reducerPath]: questionsApi.reducer,
+  [dashboardApi.reducerPath]: dashboardApi.reducer,
 });
 
 // Persist config
@@ -27,7 +29,9 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // Required for redux-persist
-    }).concat(questionsApi.middleware), // Add RTK middleware
+    }).concat(questionsApi.middleware,
+      dashboardApi.middleware 
+    ), // Add RTK middleware
 });
 
 // Create persistor for redux-persist

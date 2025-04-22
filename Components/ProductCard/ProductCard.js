@@ -1,14 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
 import StartConsultationModal from "../StartConsultationModal/StartConsultationModal";
 import ReOrderModel from "../ReOrderModel/ReOrderModel";
-import { useGetPrevsMutation } from "../../store/services/Steps/Steps";
 import { useDispatch } from "react-redux";
-import { setStepPrevApiData } from "../../store/slice/stepSlice";
-import { useNavigate } from "react-router-dom";
-import { triggerStep } from "../../store/slice/stepper";
-import { clearCart } from "../../store/slice/cartSlice";
-import { clearCartAddon } from "../../store/slice/addonCartSlice";
+// import { setStepPrevApiData } from "../../store/slice/stepSlice";
+// import { triggerStep } from "../../store/slice/stepper";
+// import { clearCart } from "../../store/slice/cartSlice";
+// import { clearCartAddon } from "../../store/slice/addonCartSlice";
+import { base_url } from "@/config/constant";
+import { useRouter } from 'next/router';
 
 const ProductCard = ({ id, title, image, price, status, buttonText, reorder, lastOrderDate }) => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -57,7 +56,7 @@ const ProductCard = ({ id, title, image, price, status, buttonText, reorder, las
     }
   }, [location.search, reorder, id]);
 
-  const navigate = useNavigate();
+  const navigate = useRouter();
 
   const handleClick = () => {
     // localStorage.removeItem("previous_id")
@@ -87,9 +86,11 @@ const ProductCard = ({ id, title, image, price, status, buttonText, reorder, las
     }
   };
   // post pid or save preApiData
-  const [getPrev, { data, error, isLoading }] = useGetPrevsMutation();
+  // const [getPrev, { data, error, isLoading }] = useGetPrevsMutation();
+  const getPrev = [];
+  const isLoading = false;
   const clinic_id = 1;
-  const url = import.meta.env.VITE_BASE_URL;
+  const url = base_url;
 
   const handleConfirm = async () => {
     localStorage.removeItem("previous_id");
@@ -113,11 +114,11 @@ const ProductCard = ({ id, title, image, price, status, buttonText, reorder, las
         localStorage.setItem("currentStep", 1);
         localStorage.removeItem("previous_id");
 
-        dispatch(triggerStep(1));
+        // dispatch(triggerStep(1));
       } else {
         localStorage.setItem("currentStep", 2);
         localStorage.removeItem("previous_id");
-        dispatch(triggerStep(2));
+        // dispatch(triggerStep(2));
       }
     } else {
       localStorage.setItem("currentStep", currentStep);
@@ -129,8 +130,8 @@ const ProductCard = ({ id, title, image, price, status, buttonText, reorder, las
     localStorage.removeItem("cart");
     localStorage.removeItem("selectedVariations");
     localStorage.removeItem("selectedMessages");
-    dispatch(clearCart());
-    dispatch(clearCartAddon());
+    // dispatch(clearCart());
+    // dispatch(clearCartAddon());
 
     // Optional: Fetch previous step data
     console.log(typeof reorder?.toString(), "reorder");
@@ -143,7 +144,7 @@ const ProductCard = ({ id, title, image, price, status, buttonText, reorder, las
       }).unwrap();
       const res = response?.data;
       if (res !== null) {
-        dispatch(setStepPrevApiData(res));
+        // dispatch(setStepPrevApiData(res));
       }
       // Navigate using React Router
       navigate(`/consultation-form/?product_id=${pid}`);
@@ -165,8 +166,8 @@ const ProductCard = ({ id, title, image, price, status, buttonText, reorder, las
     <>
       <div
         className="relative bg-white rounded-lg rounded-b-2xl overflow-hidden  transition-transform shadow-md"
-        // onMouseEnter={handleMouseEnter}
-        // onMouseLeave={handleMouseLeave}
+      // onMouseEnter={handleMouseEnter}
+      // onMouseLeave={handleMouseLeave}
       >
         {/* Out of Stock Overlay */}
         {!status && <div className="h-full w-full left-0 absolute bg-[rgba(119,136,153,0.4)] cursor-not-allowed z-10 thin-font"></div>}
@@ -189,7 +190,7 @@ const ProductCard = ({ id, title, image, price, status, buttonText, reorder, las
             src={image}
             alt={title}
             className="w-full p-5 h-52 object-contain"
-            // onError={(e) => (e.target.src = "/images/default.png")}
+          // onError={(e) => (e.target.src = "/images/default.png")}
           />
         </div>
 

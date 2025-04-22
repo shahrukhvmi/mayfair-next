@@ -119,9 +119,9 @@ const Navbar = ({ isOpen, toggleSidebar }) => {
 
         {/* Logo */}
         <div className="w-32 sm:w-40">
-          <Link href="/dashboard/" onClick={handleRemovePid}>
+          <Link href="/dashboard" onClick={handleRemovePid}>
             {/* <img src="/logo.svg" className="w-32 sm:w-40" alt="Logo" /> */}
-            <ApplicationLogo className="w-32 sm:w-40" />
+            <ApplicationLogo logoUrl={""} className="w-32 sm:w-40" />
           </Link>
         </div>
 

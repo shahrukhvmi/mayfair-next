@@ -2,7 +2,6 @@ import React from "react";
 import ProductCard from "@/Components/ProductCard/ProductCard";
 import { Skeleton } from "@mui/material";
 import { useGetProductsQuery } from "@/store/dashboardApi";
-import axios from "axios";
 
 const SkeletonCard = () => (
   <div className="p-4 my-3 bg-white rounded-lg shadow-md">
@@ -22,9 +21,6 @@ const SkeletonCard = () => (
 
 const MyAccount = () => {
   const { data, error, isLoading } = useGetProductsQuery();
-
-
-  console.log(data, "statuasadsdss")
 
   return (
     <div className={"p-5 sm:p-10 sm:bg-gray-50 sm:min-h-screen sm:rounded-lg sm:shadow-md my-5"}>
