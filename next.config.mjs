@@ -1,13 +1,16 @@
+// next.config.mjs
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
-  reactStrictMode: false,
-  trailingSlash: true,
-  images: {
-    unoptimized: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/step1',
+        permanent: false,
+      },
+    ];
   },
 };
+
 export default nextConfig;
