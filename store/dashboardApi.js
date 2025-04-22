@@ -4,12 +4,13 @@ import { base_url } from "@/config/constant";
 const baseQuery = fetchBaseQuery({
   baseUrl: base_url,
   prepareHeaders: (headers, { getState }) => {
-    const token = getState().auth.token; // Extracting token from state
+    // const token = getState().auth.token; 
+    const token = "5359|PbvxAw7AaLUOx5G4aQIW12n7Tma3HBfE6xyufX9h7e012f8e*89JB"
     if (token) {
-        headers.set("Authorization", `Bearer ${token}`); // Setting Authorization header
+      headers.set("Authorization", `Bearer ${token}`); // Setting Authorization header
     }
     return headers;
-},
+  },
 });
 
 // Create API Slice
@@ -19,7 +20,7 @@ export const dashboardApi = createApi({
   endpoints: (builder) => ({
     getProducts: builder.query({
       query: (data) => ({
-        url: "/products/GetProducts",
+        url: "/products/GetAllProducts",
         method: "GET",
         body: data,
       }),
