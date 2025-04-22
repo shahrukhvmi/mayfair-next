@@ -6,25 +6,32 @@ import NextButton from "@/Components/NextButton/NextButton";
 import BackButton from "@/Components/BackButton/BackButton";
 import dayjs from "dayjs";
 import StepperWrapper from "@/layout/StepperWrapper";
+import { useRouter } from "next/router";
 
 export default function step6() {
+  const router = useRouter();
   useEffect(() => {
     window.scrollTo({
       top: 0,
       behavior: "smooth", // You can change to "auto" for instant scrolling
     });
   }, []);
+  const step1Data = useSelector((state) => state.steps.step1);
+  const step2Data = useSelector((state) => state.steps.step2);
+  const step3Data = useSelector((state) => state.steps.step3);
+  const step4Data = useSelector((state) => state.steps.step4);
+  const step5Data = useSelector((state) => state.steps.step5);
 
   const dispatch = useDispatch();
   //   const currentStep = useSelector((state) => state.step.currentStep);
   const [steps, setStepsData] = useState({
-    step1: null,
-    step2: null,
-    step3: null,
-    step4: null,
-    step5: null,
+    step1: step1Data,
+    step2: step2Data,
+    step3: step3Data,
+    step4: step4Data,
+    step5: step5Data,
   });
-  const [prev, setPrevData] = useState(null);
+  // const [prev, setPrevData] = useState(null);
   // Load all steps data and previous step API data
   useEffect(() => {
     const loadStepsData = () => {
@@ -41,10 +48,10 @@ export default function step6() {
       console.log(data);
     };
 
-    const stepPrevApiData = localStorage.getItem("stepPrevApiData");
-    const parsedData = stepPrevApiData ? JSON.parse(stepPrevApiData) : null;
+    // const stepPrevApiData = localStorage.getItem("stepPrevApiData");
+    // const parsedData = stepPrevApiData ? JSON.parse(stepPrevApiData) : null;
 
-    setPrevData(parsedData?.last_consultation_data || null);
+    // setPrevData(parsedData?.last_consultation_data || null);
 
     loadStepsData(); // Load steps data into state
   }, []);
@@ -65,44 +72,38 @@ export default function step6() {
               <div className="p-4 bg-white border rounded-md shadow-sm">
                 <p className="text-sm font-medium text-gray-900 capitalize">Patient Name</p>
                 <p className="text-base font-semibold text-gray-900 mt-2 capitalize">
-                  {steps?.step1?.firstName || prev?.patientInfo?.firstName} <span></span>
-                  {steps?.step1?.lastName || prev?.patientInfo?.lastName}
+                  {steps?.step1?.firstName} <span></span>
+                  {steps?.step1?.lastName}
                 </p>
               </div>
 
               <div className="p-4 bg-white border rounded-md shadow-sm">
                 <p className="text-sm font-medium text-gray-900 capitalize">Patient’s Postcode*</p>
-                <p className="text-base font-semibold text-gray-900 mt-2 capitalize">
-                  {steps?.step1?.address?.postalcode || prev?.patientInfo?.address?.postalcode}
-                </p>
+                <p className="text-base font-semibold text-gray-900 mt-2 capitalize">{steps?.step1?.address?.postalcode}</p>
               </div>
 
               <div className="p-4 bg-white border rounded-md shadow-sm">
                 <p className="text-sm font-medium text-gray-900 capitalize">Are you male or female?*</p>
-                <p className="text-base font-semibold text-gray-900 mt-2 capitalize">{steps?.step1?.gender || prev?.patientInfo?.gender}</p>
+                <p className="text-base font-semibold text-gray-900 mt-2 capitalize">{steps?.step1?.gender}</p>
               </div>
 
               <div className="p-4 bg-white border rounded-md shadow-sm">
                 <p className="text-sm font-medium text-gray-900 capitalize">What is your date of birth?*</p>
                 <p className="text-base font-semibold text-gray-900 mt-2 capitalize">
-                  {steps?.step1?.dob
-                    ? dayjs(steps.step1.dob).format("DD-MM-YYYY")
-                    : "" || prev?.patientInfo?.dob
-                    ? dayjs(prev?.patientInfo?.dob).format("DD-MM-YYYY")
-                    : ""}
+                  {steps?.step1?.dob ? dayjs(steps.step1.dob).format("DD-MM-YYYY") : ""}
                 </p>
               </div>
 
               <div className="p-4 bg-white border rounded-md shadow-sm">
                 <p className="text-sm font-medium text-gray-900 capitalize">What is your height?*</p>
                 <p className="text-base font-semibold text-gray-900 mt-2 capitalize">
-                  {steps?.step2?.unit === "imperial" || prev?.patientInfo?.bmi?.unit === "imperial" ? (
+                  {steps?.step2?.unit === "imperial" ? (
                     <>
                       {" "}
-                      {steps.step2?.ft || prev?.patientInfo?.bmi?.ft} ft {steps.step2?.inch || prev?.patientInfo?.bmi?.inch} inch{" "}
+                      {steps.step2?.ft} ft {steps.step2?.inch} inch{" "}
                     </>
                   ) : (
-                    <>{steps.step2?.cm || prev?.patientInfo?.bmi?.cm} cm</>
+                    <>{steps.step2?.cm} cm</>
                   )}
                 </p>
               </div>
@@ -110,12 +111,12 @@ export default function step6() {
               <div className="p-4 bg-white border rounded-md shadow-sm">
                 <p className="text-sm font-medium text-gray-900 capitalize">What is your weight?*</p>
                 <p className="text-base font-semibold text-gray-900 mt-2 capitalize">
-                  {steps?.step2?.unit === "imperial" || prev?.patientInfo?.bmi?.unit === "imperial" ? (
+                  {steps?.step2?.unit === "imperial" ? (
                     <>
-                      {steps.step2?.stones || prev?.patientInfo?.bmi?.stones} st {steps.step2?.pound || prev?.patientInfo?.bmi?.pound} lb
+                      {steps.step2?.stones} st {steps.step2?.pound} lb
                     </>
                   ) : (
-                    <>{steps.step2?.kg || prev?.patientInfo?.bmi?.kg} kg</>
+                    <>{steps.step2?.kg} kg</>
                   )}
                 </p>
               </div>
@@ -129,7 +130,7 @@ export default function step6() {
 
           <div>
             <h3 className="text-lg font-semibold text-gray-800 mb-4 capitalize">Medical Information:</h3>
-            {(steps?.step3 || prev?.medicalInfo)?.map((item, index) => (
+            {steps?.step3?.map((item, index) => (
               <div key={index} className="p-4 bg-white border rounded-md shadow-sm mb-4">
                 <ul className="mt-3 text-sm space-y-2 list-decimal list-inside">
                   <div
@@ -165,7 +166,7 @@ export default function step6() {
                                         text-decoration: underline;
                                     }
                                 </style>
-                                ${item.question}
+                                ${item.content}
                                 `,
                     }}
                   />
@@ -181,7 +182,7 @@ export default function step6() {
 
           {/* Navigation */}
           <div className="mt-10  mb-10 hidden sm:flex">
-            <BackButton label={"Back"} onClick={() => dispatch(prevStep())} />
+            <BackButton label={"Back"} onClick={() => router.push("/step4")} />
             <NextButton label={"Next"} onClick={() => dispatch(nextStep())} />
           </div>
 

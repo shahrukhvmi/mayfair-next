@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 // import { nextStep, prevStep } from "../../store/slice/stepper";
 // import { usePostStepsMutation } from "../../store/services/Steps/Steps";
 import toast from "react-hot-toast";
-import { setStep3 } from "@/store/steps";
+import { setStep3, setStep4 } from "@/store/steps";
 import { useForm, Controller } from "react-hook-form";
 import NextButton from "@/Components/NextButton/NextButton";
 import BackButton from "@/Components/BackButton/BackButton";
@@ -13,11 +13,14 @@ import { useRouter } from "next/router";
 import { useGetQuestionsQuery } from "@/store/questionsApi";
 
 export default function step3() {
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const step3Data = useSelector((state) => state.steps.step3);
 
-  const { data } = useGetQuestionsQuery();
+  console.log(step3Data, "step 3 data from start");
+
+  // console.log(step3Data, "step3 dattaaaaaaaaaa");
 
   useEffect(() => {
     window.scrollTo({
@@ -25,8 +28,6 @@ export default function step3() {
       behavior: "smooth", // You can change to "auto" for instant scrolling
     });
   }, []);
-
-  const dispatch = useDispatch();
 
   // States
   const [questions, setQuestions] = useState([]);
@@ -53,24 +54,30 @@ export default function step3() {
   const stepPrev3Data = stepPrev3 !== undefined && stepPrev3 != "undefined" && stepPrev3 ? JSON.parse(stepPrev3) : undefined;
 
   useEffect(() => {
-    if (parsedData) {
-      const medicalQuestions = parsedData?.medical_question || [];
-      const lastConsultationData = parsedData?.last_consultation_data?.medicalInfo || [];
+    if (step3Data) {
+      const medicalQuestions = step3Data || [];
+      console.log(medicalQuestions, "medicalQuestions");
+      // const lastConsultationData = parsedData?.last_consultation_data?.medicalInfo || [];
 
       // Merge Data
       const mergedQuestions = medicalQuestions.map((q, index) => {
-        const prevAnswer = stepPrev3Data?.find((p) => p.question === q.content);
-        const matchedConsultation = lastConsultationData.find((lq) => lq.question === q.content);
+        // const prevAnswer = step3Data?.find((p) => p.question === q.content);
+        // const matchedConsultation = lastConsultationData.find((lq) => lq.question === q.content);
+        console.log(step3Data, "step3Dataaaaaaaaaa");
+        // console.log(p.question, "p.question");
+        // console.log(q.content, "q.content");
+        // console.log(prevAnswer, "prevAnswer");
 
         return {
           ...q,
           id: index,
-          answer: prevAnswer?.answer || matchedConsultation?.answer || "",
-          subfield_response: prevAnswer?.subfield_response || matchedConsultation?.subfield_response || "",
+          answer: q?.answer || "",
+          subfield_response: q?.subfield_response || "",
         };
       });
 
       setQuestions(mergedQuestions);
+      // console.log(mergedQuestions, "mergedQuestions");
 
       // Pre-fill Form Values
       const initialResponses = {};
@@ -119,16 +126,29 @@ export default function step3() {
 
   // const reorder_concent = localStorage.getItem("reorder_concent") || null;
   const onSubmit = async () => {
+    console.log("medicalInfo");
     const medicalInfo = questions.map((q) => ({
-      question: q.content,
-      qsummary: q.content,
       answer: responses[q.id]?.answer || "",
-      subfield_response: responses[q.id]?.subfield_response || "",
-      sub_field_prompt: responses[q.id]?.sub_field_prompt || "",
+      checklist: q.checklist,
+      content: q.content,
+      ftype: q.ftype,
+      has_check_filed: q.has_check_filed,
       has_sub_field: responses[q.id]?.has_sub_field || false,
+      id: q.id,
+      options: q.options,
+      qtype: q.qtype,
+      sub_field_prompt: responses[q.id]?.sub_field_prompt || "",
+      subfield_response: responses[q.id]?.subfield_response || "",
+      summary: q.content,
+      validated_answers: q.validated_answers,
+      validation_error_msg: q.validation_error_msg,
     }));
 
+    // console.log(step3Data, "questions");
+    console.log(step3Data, "questions");
+
     dispatch(setStep3(medicalInfo));
+    router.push("/step4");
     // try {
     //   const response = await postSteps({
     //     medicalInfo,
@@ -170,9 +190,9 @@ export default function step3() {
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
           {questions.map((q) => {
             const selectedAnswer = watch(`responses[${q.id}].answer`);
-            {
-              console.log(q, "Questions");
-            }
+            // {
+            //   console.log(q, "Questions");
+            // }
             return (
               <div
                 key={q.id}

@@ -67,82 +67,82 @@ export default function step6() {
     }
   }, [product?.show_expiry, clearErrors, setValue]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     dispatch(setStockLoading(false));
-  //     const pid = localStorage.getItem("pid");
-  //     // localStorage.setItem("pid", pid);
-  //     const p_id = localStorage.getItem("p_id");
-  //     localStorage.setItem("comingFromStart", 0);
-  //     localStorage.setItem("start_concent", true);
+  useEffect(() => {
+    const fetchData = async () => {
+      // dispatch(setStockLoading(false));
+      const pid = localStorage.getItem("pid");
+      // localStorage.setItem("pid", pid);
+      const p_id = localStorage.getItem("p_id");
+      localStorage.setItem("comingFromStart", 0);
+      localStorage.setItem("start_concent", true);
 
-  //     if (localStorage.getItem("in_stock")) {
-  //       localStorage.removeItem("in_stock");
-  //     }
+      if (localStorage.getItem("in_stock")) {
+        localStorage.removeItem("in_stock");
+      }
 
-  //     try {
-  //       const response = await getPrev({ url, clinic_id, product_id: pid || p_id }).unwrap();
-  //       const res = response?.data;
-  //       if (res !== null) {
-  //         const vari = res?.selected_product?.variations || [];
-  //         const addon = res?.selected_product?.addons || [];
-  //         const pro = res?.selected_product || {};
+      try {
+        const response = await getPrev({ url, clinic_id, product_id: pid || p_id }).unwrap();
+        const res = response?.data;
+        if (res !== null) {
+          const vari = res?.selected_product?.variations || [];
+          const addon = res?.selected_product?.addons || [];
+          const pro = res?.selected_product || {};
 
-  //         const updatedVariations = vari.map((v, index) => ({ ...v, qty: 0, index }));
-  //         const updatedAddons = addon.map((a, index) => ({ ...a, qty: 0, index }));
-  //         const product = pro && typeof pro === "object" && !Array.isArray(pro) ? { ...pro, qty: 0 } : {};
+          const updatedVariations = vari.map((v, index) => ({ ...v, qty: 0, index }));
+          const updatedAddons = addon.map((a, index) => ({ ...a, qty: 0, index }));
+          const product = pro && typeof pro === "object" && !Array.isArray(pro) ? { ...pro, qty: 0 } : {};
 
-  //         setProduct(product);
-  //         setAddons(updatedAddons);
-  //         setVariations(updatedVariations);
+          setProduct(product);
+          setAddons(updatedAddons);
+          setVariations(updatedVariations);
 
-  //         localStorage.setItem("items", JSON.stringify({ product, addons: updatedAddons, variations: updatedVariations }));
+          localStorage.setItem("items", JSON.stringify({ product, addons: updatedAddons, variations: updatedVariations }));
 
-  //         if (cart.length > 0) {
-  //           const items = JSON.parse(localStorage.getItem("items"));
+          if (cart.length > 0) {
+            const items = JSON.parse(localStorage.getItem("items"));
 
-  //           if (items) {
-  //             const updatedVariations = items?.variations?.map((v, index) => {
-  //               const isSelected = cart.some((item) => item.id === v.id);
-  //               const cartItem = cart.find((item) => item.id === v.id);
+            if (items) {
+              const updatedVariations = items?.variations?.map((v, index) => {
+                const isSelected = cart.some((item) => item.id === v.id);
+                const cartItem = cart.find((item) => item.id === v.id);
 
-  //               const updatedQty = cartItem ? cartItem.qty : v.qty;
+                const updatedQty = cartItem ? cartItem.qty : v.qty;
 
-  //               return { ...v, qty: updatedQty, index, isSelected };
-  //             });
-  //             setVariations(updatedVariations);
-  //           }
+                return { ...v, qty: updatedQty, index, isSelected };
+              });
+              setVariations(updatedVariations);
+            }
 
-  //           if (addonCart?.addonCart?.length > 0) {
-  //             const items = JSON.parse(localStorage.getItem("items"));
+            if (addonCart?.addonCart?.length > 0) {
+              const items = JSON.parse(localStorage.getItem("items"));
 
-  //             if (items) {
-  //               const updatedAddons = items?.addons?.map((v, index) => {
-  //                 const isSelected = addonCart?.addonCart?.some((item) => item.id === v.id);
-  //                 const cartItem = addonCart?.addonCart?.find((item) => item.id === v.id);
+              if (items) {
+                const updatedAddons = items?.addons?.map((v, index) => {
+                  const isSelected = addonCart?.addonCart?.some((item) => item.id === v.id);
+                  const cartItem = addonCart?.addonCart?.find((item) => item.id === v.id);
 
-  //                 const updatedQty = cartItem ? cartItem.qty : v.qty;
+                  const updatedQty = cartItem ? cartItem.qty : v.qty;
 
-  //                 return { ...v, qty: updatedQty, index, isSelected };
-  //               });
-  //               setAddons(updatedAddons);
-  //             }
-  //           }
-  //         }
-  //       }
-  //     } catch (err) {
-  //       console.error("Failed to fetch previous steps:", err);
-  //     }
-  //   };
+                  return { ...v, qty: updatedQty, index, isSelected };
+                });
+                setAddons(updatedAddons);
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch previous steps:", err);
+      }
+    };
 
-  //   fetchData();
-  //   const items = JSON.parse(localStorage.getItem("items"));
-  //   if (items) {
-  //     setProduct(items.product);
-  //     setAddons(items.addons);
-  //     setVariations(items.variations);
-  //   }
-  // }, []);
+    fetchData();
+    const items = JSON.parse(localStorage.getItem("items"));
+    if (items) {
+      setProduct(items.product);
+      setAddons(items.addons);
+      setVariations(items.variations);
+    }
+  }, []);
   const [isDoseSelected, setIsDoseSelected] = useState(false);
 
   useEffect(() => {
