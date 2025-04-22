@@ -27,7 +27,6 @@ const Stepone = () => {
 
   const { data } = useGetQuestionsQuery();
   dispatch(setStep3(data?.data?.medical_question));
-  // console.log(data?.data?.medical_question, "data?.data?.medical_question");
   dispatch(setStep4(data?.data?.confirmation_question));
 
   useEffect(() => {
@@ -234,7 +233,7 @@ const Stepone = () => {
 
     // dispatch(nextStep());
 
-    localStorage.removeItem("previous_id");
+    // localStorage.removeItem("previous_id");
 
     // try {
     //   const response = await postSteps({
