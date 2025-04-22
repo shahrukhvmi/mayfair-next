@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import StepperWrapper from "@/layout/StepperWrapper";
 import { useRouter } from "next/router";
 
-export default function step6() {
+function Step6() {
   const router = useRouter();
   useEffect(() => {
     window.scrollTo({
@@ -214,3 +214,4 @@ export default function step6() {
     </>
   );
 }
+export default Step6;

@@ -11,8 +11,7 @@ import { FaCheck } from "react-icons/fa";
 import StepperWrapper from "@/layout/StepperWrapper";
 import { useRouter } from "next/router";
 import { useGetQuestionsQuery } from "@/store/questionsApi";
-
-export default function step3() {
+ function Step3() {
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -315,3 +314,4 @@ export default function step3() {
     </StepperWrapper>
   );
 }
+export default Step3;

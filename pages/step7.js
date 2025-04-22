@@ -20,7 +20,7 @@ import OrderSummaryAddons from "@/Components/AddonList/OrderSummaryAddons";
 import DosageCheckPopup from "@/Components/DosageCheckPopup/DosageCheckPopup";
 import StepperWrapper from "@/layout/StepperWrapper";
 
-export default function step6() {
+function Step6() {
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -730,3 +730,5 @@ export default function step6() {
     </section>
   );
 }
+
+export default Step7;

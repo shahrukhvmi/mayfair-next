@@ -22,7 +22,7 @@ import { useGetQuestionsQuery } from "@/store/questionsApi";
 
 // import { useLocation } from "react-router-dom";
 
-const Stepone = () => {
+function Step1 {
   const dispatch = useDispatch();
 
   const { data } = useGetQuestionsQuery();
@@ -898,4 +898,4 @@ const Stepone = () => {
   );
 };
 
-export default Stepone;
+export default Step1;
