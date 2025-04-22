@@ -9,7 +9,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 // import { nextStep } from "../../store/slice/stepper";
 import { useDispatch, useSelector } from "react-redux";
-import { setStep1 } from "@/store/steps";
+import { setStep1, setStep3, setStep4 } from "@/store/steps";
 import dayjs from "dayjs";
 // import { useFetchAddressesQuery } from "../../store/services/addressApi/addressApi";
 import toast from "react-hot-toast";
@@ -18,10 +18,18 @@ import NextButton from "@/Components/NextButton/NextButton";
 import StepperWrapper from "@/layout/StepperWrapper";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useGetQuestionsQuery } from "@/store/questionsApi";
 
 // import { useLocation } from "react-router-dom";
 
 const Stepone = () => {
+  const dispatch = useDispatch();
+
+  const { data } = useGetQuestionsQuery();
+  dispatch(setStep3(data?.data?.medical_question));
+  // console.log(data?.data?.medical_question, "data?.data?.medical_question");
+  dispatch(setStep4(data?.data?.confirmation_question));
+
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -46,7 +54,6 @@ const Stepone = () => {
   }, [productId]);
 
   // changes done on live..??
-  const dispatch = useDispatch();
   //   const stepPrevApiData = localStorage.getItem("stepPrevApiData");
   //   const stepPrev = localStorage.getItem("step1");
   //   const userData = localStorage.getItem("userData");
@@ -374,7 +381,6 @@ const Stepone = () => {
   }, [gender]);
   const error = null;
   const loader = null;
-  const data = null;
 
   const router = useRouter();
 

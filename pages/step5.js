@@ -10,9 +10,17 @@ import toast from "react-hot-toast";
 import NextButton from "@/Components/NextButton/NextButton";
 import BackButton from "@/Components/BackButton/BackButton";
 import StepperWrapper from "@/layout/StepperWrapper";
+import { useRouter } from "next/router";
+import { setStep5 } from "@/store/steps";
 // import { setStep5 } from "../../store/slice/stepSlice";
 
 export default function step5() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const step5Data = useSelector((state) => state.steps.step5);
+
+  console.log(step5Data, "step5Data");
+
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -24,18 +32,17 @@ export default function step5() {
   //   const [postSteps, { error: isError, isLoading }] = usePostStepsMutation();
   const [lastConsultation, setLastConsultation] = useState(null);
   const [prevStepFiveData, setprevStepFiveData] = useState(null);
-  const dispatch = useDispatch();
   const [btnZipCode, setbtnZipCode] = useState(false);
 
   useEffect(() => {
-    const stepPrevAPiData = localStorage.getItem("stepPrevApiData");
-    const stepFivePrev = localStorage.getItem("step5");
-    if (lastConsultation !== null || prevStepFiveData !== undefined) {
-      const dataParse = JSON.parse(stepPrevAPiData);
+    // const stepPrevAPiData = localStorage.getItem("stepPrevApiData");
+    // const stepFivePrev = localStorage.getItem("step5");
+    if (step5Data !== null || step5Data !== undefined) {
+      const dataParse = step5Data;
       // const stepfiveParse = JSON.parse(stepFivePrev);
-      const stepfiveParse = stepFivePrev !== undefined && stepFivePrev != "undefined" && stepFivePrev ? JSON.parse(stepFivePrev) : undefined;
+      const stepfiveParse = step5Data !== undefined && step5Data != "undefined" && step5Data ? step5Data : undefined;
 
-      setLastConsultation(dataParse?.last_consultation_data?.gpdetails);
+      setLastConsultation(dataParse);
       setprevStepFiveData(stepfiveParse);
     }
   }, []);
@@ -74,20 +81,23 @@ export default function step5() {
       state: data.gpDetails === "yes" && data.gepTreatMent === "yes" ? data.state : "",
       city: data.gpDetails === "yes" && data.gepTreatMent === "yes" ? data.city : "",
     };
-    try {
-      const response = await postSteps({
-        gpdetails: gpDetails,
-        pid: getPid || stockPid,
-        reorder_concent: reorder_concent ? reorder_concent.toString() : null,
-      }).unwrap();
-      if (response.status === true) {
-        dispatch(nextStep());
-        dispatch(setStep5(response?.lastConsultation?.fields?.gpdetails));
-      }
-      // e.preventDefault();
-    } catch (error) {
-      console.log(error);
-    }
+    console.log(gpDetails, "gpDetailsgpDetailsgpDetailsgpDetailsgpDetails");
+    dispatch(setStep5(gpDetails));
+    router.push("/step6");
+    // try {
+    //   const response = await postSteps({
+    //     gpdetails: gpDetails,
+    //     pid: getPid || stockPid,
+    //     reorder_concent: reorder_concent ? reorder_concent.toString() : null,
+    //   }).unwrap();
+    //   if (response.status === true) {
+    //     dispatch(nextStep());
+    //     dispatch(setStep5(response?.lastConsultation?.fields?.gpdetails));
+    //   }
+    //   // e.preventDefault();
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const handleSelect = (index) => {
@@ -144,20 +154,20 @@ export default function step5() {
   }, [searchClicked, postalCode]);
 
   useEffect(() => {
-    if (lastConsultation || prevStepFiveData) {
-      setValue("gpDetails", prevStepFiveData?.gpConsent || "" || lastConsultation?.gpConsent);
-      setValue("gepTreatMent", prevStepFiveData?.consentDetail || "" || lastConsultation?.consentDetail);
-      setValue("email", prevStepFiveData?.email || "" || lastConsultation?.email);
-      setValue("gpName", prevStepFiveData?.gpName || "" || lastConsultation?.gpName);
-      setValue("postalCode", prevStepFiveData?.zipcode || "" || lastConsultation?.zipcode);
-      setValue("addressLine1", prevStepFiveData?.addressLine1 || "" || lastConsultation?.addressLine1);
-      setValue("addressLine2", prevStepFiveData?.addressLine2 || "" || lastConsultation?.addressLine2);
-      setValue("state", prevStepFiveData?.state || "" || lastConsultation?.state);
-      setValue("city", prevStepFiveData?.city || "" || lastConsultation?.city);
+    if (step5Data) {
+      setValue("gpDetails", step5Data?.gpConsent || "");
+      setValue("gepTreatMent", step5Data?.consentDetail || "");
+      setValue("email", step5Data?.email || "");
+      setValue("gpName", step5Data?.gpName || "");
+      setValue("postalCode", step5Data?.zipcode || "");
+      setValue("addressLine1", step5Data?.addressLine1 || "");
+      setValue("addressLine2", step5Data?.addressLine2 || "");
+      setValue("state", step5Data?.state || "");
+      setValue("city", step5Data?.city || "");
     }
 
     trigger("gpDetails");
-  }, [lastConsultation, setValue, prevStepFiveData, trigger]);
+  }, [setValue, step5Data, trigger]);
 
   const textFieldStyles = {
     "& label": {
@@ -505,7 +515,7 @@ export default function step5() {
           )}
 
           <div className="mt-10 sm:flex mb-10 hidden ">
-            <BackButton label={"Back"} onClick={() => dispatch(prevStep())} />
+            <BackButton label={"Back"} onClick={() => router.push("/step4")} />
             {/* <NextButton label={"Next"} disabled={!isValid || isLoading} loading={isLoading} /> */}
             <NextButton label={"Next"} disabled={!isValid} />
           </div>

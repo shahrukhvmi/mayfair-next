@@ -10,8 +10,11 @@ import NextButton from "@/Components/NextButton/NextButton";
 import BackButton from "@/Components/BackButton/BackButton";
 import DynamicRadioButton from "@/Components/DynamicCheckBox/DynamicCheckBox";
 import StepperWrapper from "@/layout/StepperWrapper";
+import { useRouter } from "next/router";
+import { setStep4 } from "@/store/steps";
 
 export default function step4() {
+  const router = useRouter();
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -23,6 +26,10 @@ export default function step4() {
   //   const currentStep = useSelector((state) => state.step.currentStep);
   const [getQuestion, setGetQuestion] = useState(null);
   const [confirmationInfo, setconfirmationInfo] = useState(null);
+
+  const step4Data = useSelector((state) => state.steps.step4);
+
+  console.log(step4Data, "step4Data");
 
   //   const [postSteps, { error: isError, isLoading: loader }] = usePostStepsMutation();
   //   const pid = localStorage.getItem("pid");
@@ -45,15 +52,13 @@ export default function step4() {
   // Fetch Data from Local Storage
   useEffect(() => {
     console.log("THis is Effect");
-    const stepPrevData = localStorage.getItem("stepPrevApiData");
-    if (stepPrevData) {
-      const dataParse = JSON.parse(stepPrevData);
-      console.log(dataParse, "dataParsesssss");
-      const answer = Array.isArray(dataParse?.last_consultation_data?.confirmationInfo)
-        ? dataParse.last_consultation_data.confirmationInfo[0]?.answer
-        : null;
+    // const stepPrevData = localStorage.getItem("stepPrevApiData");
+    if (step4Data) {
+      // const dataParse = JSON.parse(stepPrevData);
+      // console.log(dataParse, "dataParsesssss");
+      const answer = Array.isArray(step4Data) ? step4Data[0]?.answer : null;
       console.log(answer, "answeeerrrrr From Inner");
-      setGetQuestion(dataParse?.confirmation_question[0]?.qa); // Safe navigation
+      setGetQuestion(step4Data[0]); // Safe navigation
 
       if (answer == true) {
         setValue("confirmation_question", true);
@@ -61,10 +66,10 @@ export default function step4() {
         setValue("confirmation_question", false);
       }
     }
-    const checkPrevData = localStorage.getItem("step4");
-    if (checkPrevData) {
+    // const checkPrevData = localStorage.getItem("step4");
+    if (step4Data) {
       // const dataParse = JSON.parse(checkPrevData);
-      const dataParse = checkPrevData !== undefined && checkPrevData != "undefined" && checkPrevData ? JSON.parse(checkPrevData) : undefined;
+      const dataParse = step4Data !== undefined && step4Data != "undefined" && step4Data ? step4Data : undefined;
 
       console.log(dataParse, "dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
@@ -82,29 +87,36 @@ export default function step4() {
   useEffect(() => {
     const updatedConfirmation = [
       {
-        question: getQuestion?.content,
-        qsummary: getQuestion?.content,
+        question: getQuestion?.qsummary,
+        qsummary: getQuestion?.question,
         checklist: getQuestion?.checklist,
         answer: isChecked,
         has_checklist: getQuestion?.has_check_list ? getQuestion?.has_check_list : true,
       },
     ];
     setconfirmationInfo(updatedConfirmation); // Update state with the new value
+    console.log(getQuestion, "getQuestion");
   }, [isChecked, getQuestion]);
 
   // Form submission handler
   const onSubmit = async (data) => {
-    try {
-      const response = await postSteps({
-        pid: pid || stockPid,
-        confirmationInfo,
-        reorder_concent: reorder_concent ? reorder_concent.toString() : null,
-      }).unwrap();
-      dispatch(setStep4(confirmationInfo)); // Dispatch action to update step 4
-      dispatch(nextStep());
-    } catch (error) {
-      console.log(error);
-    }
+    console.log(confirmationInfo, "confirmationInfooooooooo");
+    dispatch(setStep4(confirmationInfo)); // Dispatch action to update step 4
+    router.push("/step5");
+    // try {
+    //   const response = await postSteps({
+    //     pid: pid || stockPid,
+    //     confirmationInfo,
+    //     reorder_concent: reorder_concent ? reorder_concent.toString() : null,
+    //   }).unwrap();
+
+    //   console.log(confirmationInfo, "confirmationInfooooooooo");
+
+    //   dispatch(setStep4(confirmationInfo)); // Dispatch action to update step 4
+    //   // dispatch(nextStep());
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (
@@ -124,9 +136,9 @@ export default function step4() {
             {/* Dynamically Render Checkboxes */}
             {getQuestion && (
               <DynamicRadioButton
-                key={getQuestion.content}
+                key={getQuestion.question}
                 name="confirmation_question" // Register with react-hook-form
-                label={getQuestion.content}
+                label={getQuestion.question}
                 terms={getQuestion.checklist} // Pass raw HTML string
                 register={register("confirmation_question", {
                   required: "You must confirm before proceeding.",
@@ -166,7 +178,7 @@ export default function step4() {
           </div> */}
 
             <div className="mt-10 mb-10 hidden sm:flex">
-              <BackButton label={"Back"} onClick={() => dispatch(prevStep())} />
+              <BackButton label={"Back"} onClick={() => router.push("/step3")} />
               {/* <NextButton disabled={!isValid || loader} label={"Next"} loading={loader} /> */}
               <NextButton disabled={!isValid} label={"Next"} />
             </div>
