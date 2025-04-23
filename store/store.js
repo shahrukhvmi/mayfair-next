@@ -5,12 +5,20 @@ import storage from "redux-persist/lib/storage";
 
 import stepReducer from "./steps"; // Your step slice
 import { questionsApi } from "./questionsApi";
-import { dashboardApi } from "@/store/dashboardApi"
+import { dashboardApi } from "@/store/dashboardApi";
 import { productVariationApi } from "./productVariationApi";
+import cartReducer from "./slice/cartSlice";
+import addonCartReducer from "./slice/addonCartSlice";
+import selectedMessagesReducer from "./slice/selectedMessagesSlice";
+import itemsReducer from "./slice/itemsSlice";
 
 // Combine all reducers
 const rootReducer = combineReducers({
   steps: stepReducer, // Form steps
+  cart: cartReducer,
+  addonCart: addonCartReducer,
+  selectedMessages: selectedMessagesReducer,
+  items: itemsReducer,
   [questionsApi.reducerPath]: questionsApi.reducer,
   [dashboardApi.reducerPath]: dashboardApi.reducer,
   [productVariationApi.reducerPath]: productVariationApi.reducer,
@@ -31,10 +39,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // Required for redux-persist
-    }).concat(questionsApi.middleware,
-      dashboardApi.middleware,
-      productVariationApi.middleware 
-    ), // Add RTK middleware
+    }).concat(questionsApi.middleware, dashboardApi.middleware, productVariationApi.middleware), // Add RTK middleware
 });
 
 // Create persistor for redux-persist
