@@ -19,10 +19,16 @@ import StepperWrapper from "@/layout/StepperWrapper";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useGetQuestionsQuery } from "@/store/questionsApi";
-import { useFetchAddressesQuery } from "@/store/addressApi";
 
-const Stepone = () => {
-  const route = useRouter()
+// import { useLocation } from "react-router-dom";
+
+const Step1 = () => {
+  const dispatch = useDispatch();
+  const isLoading = false;
+  const { data } = useGetQuestionsQuery();
+  dispatch(setStep3(data?.data?.medical_question));
+  dispatch(setStep4(data?.data?.confirmation_question));
+
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -30,13 +36,43 @@ const Stepone = () => {
     });
   }, []);
 
+  const step1Data = useSelector((state) => state.steps.step1);
+
+  console.log(step1Data, "step1Data");
+
+  //   const location = useLocation();
+
+  // Parse the query string
+  //   const searchParams = new URLSearchParams(window.location.search);
+  //   const productId = searchParams.get("product_id");
+  const productId = 0;
+
+  useEffect(() => {
+    console.log("Product ID from query:", productId);
+    // you can now use productId to fetch data or set state
+  }, [productId]);
+
   // changes done on live..??
-  const dispatch = useDispatch();
+  //   const stepPrevApiData = localStorage.getItem("stepPrevApiData");
+  //   const stepPrev = localStorage.getItem("step1");
+  //   const userData = localStorage.getItem("userData");
   const [lastConsultation, setLastConsultation] = useState(null);
   const [prevStep1, setPrevStep1] = useState(null);
   const [userInfo, setUseriIfo] = useState(null);
   const [btnZipCode, setbtnZipCode] = useState(false);
 
+  // useEffect(() => {
+  //     if (stepPrevApiData !== null || stepPrev !== undefined || userData !== undefined) {
+  //         const parsedData = JSON.parse(stepPrevApiData);
+
+  //         const stepPrevParse = stepPrev !== undefined && stepPrev != "undefined" && stepPrev ? JSON.parse(stepPrev) : undefined;
+  //         const userInfo = JSON.parse(userData);
+
+  //         setLastConsultation(parsedData?.last_consultation_data?.patientInfo);
+  //         setPrevStep1(stepPrevParse);
+  //         setUseriIfo(userInfo?.profile?.user);
+  //     }
+  // }, []);
 
   const {
     register,
@@ -61,19 +97,19 @@ const Stepone = () => {
   const [searchClicked, setSearchClicked] = useState(false);
 
   useEffect(() => {
-    if (lastConsultation || prevStep1 || userInfo) {
-      setZipCode(prevStep1?.address?.postalcode || lastConsultation?.address?.postalcode || "");
-      setValue("postCode", prevStep1?.address?.postalcode || lastConsultation?.address?.postalcode || "");
-      setValue("firstName", prevStep1?.firstName || lastConsultation?.firstName || "" || userInfo?.fname);
-      setValue("lastName", lastConsultation?.lastName || prevStep1?.lastName || "" || userInfo?.lname);
-      setValue("phoneNumber", lastConsultation?.phoneNo || prevStep1?.phoneNo || "" || userInfo?.phone);
-      setValue("gender", lastConsultation?.gender || prevStep1?.gender || "" || userInfo?.gender);
-      setValue("dateOfBirth", lastConsultation?.dob || prevStep1?.dob || "" || userInfo?.dob);
-      setValue("breastFeeding", lastConsultation?.pregnancy || prevStep1?.pregnancy || "");
-      setValue("ethnicity", prevStep1?.ethnicity || "" || lastConsultation?.ethnicity);
-      setValue("streetAddress", lastConsultation?.address?.addressone || prevStep1?.address?.addressone || "");
-      setValue("streetAddress2", lastConsultation?.address?.addresstwo || prevStep1?.address?.addresstwo || "");
-      setValue("city", lastConsultation?.address?.city || prevStep1?.address?.city || "");
+    if (step1Data) {
+      setZipCode(step1Data?.address?.postalcode || "");
+      setValue("postCode", step1Data?.address?.postalcode || "");
+      setValue("firstName", step1Data?.firstName || "");
+      setValue("lastName", step1Data?.lastName || "");
+      setValue("phoneNumber", step1Data?.phoneNo || "");
+      setValue("gender", step1Data?.gender || "");
+      setValue("dateOfBirth", step1Data?.dob || "");
+      setValue("breastFeeding", step1Data?.pregnancy || "");
+      setValue("ethnicity", step1Data?.ethnicity || "");
+      setValue("streetAddress", step1Data?.address?.addressone || "");
+      setValue("streetAddress2", step1Data?.address?.addresstwo || "");
+      setValue("city", step1Data?.address?.city || "");
       // setValue("country", lastConsultation.address?.country || "");
 
       const dob = getValues("dateOfBirth");
@@ -109,7 +145,7 @@ const Stepone = () => {
         }
       }
 
-      setValue("state", prevStep1?.address?.state || "" || lastConsultation?.address?.state);
+      setValue("state", step1Data?.address?.state || "");
       trigger([
         "firstName",
         "lastName",
@@ -126,12 +162,12 @@ const Stepone = () => {
         if (!isValid) console.log("Errors:", errors);
       });
     }
-  }, [lastConsultation, setValue, trigger, prevStep1]);
+  }, [setValue, trigger, step1Data]);
 
   // 👇👇**RTK Query - Fetch addresses**👇👇
-  const { data, error, isLoading } = useFetchAddressesQuery(zipCode, {
-    skip: !searchClicked || !zipCode,
-  });
+  //   const { data, error, isLoading } = useFetchAddressesQuery(zipCode, {
+  //     skip: !searchClicked || !zipCode,
+  //   });
 
   const handleSearch = () => {
     if (zipCode.trim() !== "") {
@@ -161,9 +197,14 @@ const Stepone = () => {
     } else {
       setAddressOptions([]);
     }
-  }, [data]);
-  const loader = false;
+    //   }, [data]);
+  }, []);
 
+  //   const reorder_concent = localStorage.getItem("reorder_concent") || null;
+  //   const currentStep = useSelector((state) => state.step.currentStep);
+  //   const [postSteps, { error: isError, isLoading: loader }] = usePostStepsMutation();
+
+  //   const getPid = localStorage.getItem("pid");
 
   const onSubmit = async (data) => {
     const patientInfo = {
@@ -188,8 +229,13 @@ const Stepone = () => {
 
     dispatch(setStep1(patientInfo));
 
-    route.push("/step2")
+    router.push("/step2")
+    // localStorage.setItem("reorder_concent", reorder_concent);
+    // localStorage.setItem("pid", getPid)
 
+    // dispatch(nextStep());
+
+    // localStorage.removeItem("previous_id");
 
     // try {
     //   const response = await postSteps({
@@ -235,7 +281,7 @@ const Stepone = () => {
 
     const age = today.diff(date, "year");
 
-    const productId = 1
+    console.log(age, "Aaaggeeeeee");
 
     if (productId == 1) {
       if (age < 18) {
@@ -334,6 +380,14 @@ const Stepone = () => {
       setWarningMessage("");
     }
   }, [gender]);
+  const error = null;
+  const loader = null;
+
+  const router = useRouter();
+
+  const handleNextBtn = () => {
+    router.push("/step2");
+  };
   return (
     <StepperWrapper>
 
@@ -868,4 +922,4 @@ const Stepone = () => {
   );
 };
 
-export default Stepone;
+export default Step1;
