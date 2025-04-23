@@ -22,6 +22,8 @@ export default function step6() {
   const step4Data = useSelector((state) => state.steps.step4);
   const step5Data = useSelector((state) => state.steps.step5);
 
+  console.log(step3Data, "step3Data");
+
   const dispatch = useDispatch();
   //   const currentStep = useSelector((state) => state.step.currentStep);
   const [steps, setStepsData] = useState({
@@ -34,27 +36,14 @@ export default function step6() {
   // const [prev, setPrevData] = useState(null);
   // Load all steps data and previous step API data
   useEffect(() => {
-    const loadStepsData = () => {
-      const stepKeys = ["step1", "step2", "step3", "step4", "step5"];
-      const data = {};
-
-      stepKeys.forEach((step) => {
-        const storedData = localStorage.getItem(step);
-        data[step] = storedData !== undefined && storedData != "undefined" && storedData ? JSON.parse(storedData) : undefined;
-        // storedData !== undefined && storedData != "undefined" && storedData ? JSON.parse(storedData) : undefined;
-      });
-
-      setStepsData(data); // Update state with loaded steps data
-      console.log(data);
-    };
-
-    // const stepPrevApiData = localStorage.getItem("stepPrevApiData");
-    // const parsedData = stepPrevApiData ? JSON.parse(stepPrevApiData) : null;
-
-    // setPrevData(parsedData?.last_consultation_data || null);
-
-    loadStepsData(); // Load steps data into state
-  }, []);
+    setStepsData({
+      step1: step1Data,
+      step2: step2Data,
+      step3: step3Data,
+      step4: step4Data,
+      step5: step5Data,
+    });
+  }, [step1Data, step2Data, step3Data, step4Data, step5Data]);
 
   return (
     <>
@@ -182,8 +171,14 @@ export default function step6() {
 
           {/* Navigation */}
           <div className="mt-10  mb-10 hidden sm:flex">
-            <BackButton label={"Back"} onClick={() => router.push("/step4")} />
-            <NextButton label={"Next"} onClick={() => dispatch(nextStep())} />
+            <BackButton label={"Back"} onClick={() => router.push("/step5")} />
+            <button
+              type="submit"
+              onClick={() => router.push("/step7")}
+              className={`ms-2 p-3 flex flex-col items-center justify-center ${"text-white rounded-md bg-violet-700"}`}
+            >
+              <span className="text-md font-semibold px-6">Next</span>
+            </button>
           </div>
 
           <div className="fixed bottom-2 w-[95%] mx-auto left-0 right-0 z-50 block sm:hidden">
@@ -192,7 +187,7 @@ export default function step6() {
               <div className="relative flex w-full justify-between items-center">
                 {/* Back Button */}
                 <button
-                  onClick={() => dispatch(prevStep())}
+                  onClick={() => router.push("/step5")}
                   className="flex flex-col items-center justify-center text-white rounded-md bg-violet-700 p-3"
                 >
                   <span className="text-md font-semibold px-6">Back</span>
@@ -201,7 +196,7 @@ export default function step6() {
                 {/* Proceed Button */}
                 <button
                   type="submit"
-                  onClick={() => dispatch(nextStep())}
+                  onClick={() => router.push("/step7")}
                   className={`p-3 flex flex-col items-center justify-center ${"text-white rounded-md bg-violet-700"}`}
                 >
                   <span className="text-md font-semibold px-6">Next</span>
