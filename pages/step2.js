@@ -4,12 +4,12 @@ import { TextField, Button, Box, Typography, FormControlLabel, Checkbox } from "
 import { useDispatch, useSelector } from "react-redux";
 import { setStep2 } from "@/store/steps";
 import NextButton from "@/Components/NextButton/NextButton";
-import BackButton from "@/Components/BackButton/BackButton";
+import BackButton from "@/Components/BackButton/BackButton"; 
 import { BsInfoCircle } from "react-icons/bs";
 import StepperWrapper from "@/layout/StepperWrapper";
 import { useRouter } from "next/router";
 
-const Step2 = () => {
+  const Step2 = () => {
   const router = useRouter();
   const step2Data = useSelector((state) => state.steps.step2);
 
@@ -216,6 +216,36 @@ const Step2 = () => {
       trigger("weight_related_comorbidity_explanation");
     }
   }, [step2Data, setValue, trigger]);
+
+
+  useEffect(() => {
+    if (step2Data) {
+      setValue("heightFt", step2Data?.ft || "");
+      setValue("heightIn", step2Data?.inch || "");
+      setValue("weightStones", step2Data?.stones || "");
+      setValue("weightLbs", step2Data?.pound || "");
+      setValue("weightKg", step2Data?.kg || "");
+      setValue("heightCm", step2Data?.cm || "");
+      setValue("bmi", step2Data?.bmi || "");
+      setValue("hiddenInch", step2Data?.inch || "");
+      setValue("hiddenCm", step2Data?.cm || "");
+      setValue("hiddenLb", step2Data?.pound || "");
+      setValue("hiddenKg", step2Data?.kg || "");
+  
+      // Delay trigger until all values are set
+      setTimeout(() => {
+        trigger([
+          "heightFt",
+          "heightIn",
+          "weightStones",
+          "weightLbs",
+          "heightCm",
+          "weightKg",
+        ]);
+      }, 0);
+    }
+  }, [step2Data]);
+  
 
   const dispatch = useDispatch();
   //   const currentStep = useSelector((state) => state.step.currentStep);
@@ -473,8 +503,8 @@ const Step2 = () => {
                 <Box
                   onClick={() => handleUnitChange("imperial")}
                   className={`sm:w-3/4   w-32 cursor-pointer flex items-center justify-between px-6 py-3 rounded-lg transition duration-300 shadow-md ${unit === "imperial"
-                    ? "border-2 border-green-500 bg-green-50 text-green-600 shadow-lg"
-                    : "border border-gray-100 bg-white text-gray-800 hover:shadow"
+                      ? "border-2 border-green-500 bg-green-50 text-green-600 shadow-lg"
+                      : "border border-gray-100 bg-white text-gray-800 hover:shadow"
                     }`}
                 >
                   <span className="text-sm font-bold">IMPERIAL</span>
@@ -491,8 +521,8 @@ const Step2 = () => {
                 <Box
                   onClick={() => handleUnitChange("metrics")}
                   className={`sm:w-3/4 w-32 cursor-pointer flex items-center justify-between px-6 py-3 rounded-lg transition duration-300 shadow-md ${unit === "metrics"
-                    ? "border-2 border-green-500 bg-green-50 text-green-600 shadow-lg"
-                    : "border border-gray-300 bg-white text-gray-800 hover:shadow"
+                      ? "border-2 border-green-500 bg-green-50 text-green-600 shadow-lg"
+                      : "border border-gray-300 bg-white text-gray-800 hover:shadow"
                     }`}
                 >
                   <span className="text-sm font-bold">METRICS</span>
@@ -513,14 +543,11 @@ const Step2 = () => {
                   </div>
                   <div className="grid grid-cols-12 gap-4">
                     <div className="col-span-6">
-                      <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700 mb-1">
-                        feet<span className="text-red-500">*</span>
-                      </label>
                       <TextField
                         type="text"
                         inputMode="numeric"
-                        variant="outlined"
-                        label=""
+                        variant="standard"
+                        label="ft"
                         value={watch("heightFt") || ""}
                         onInput={(e) => {
                           e.target.value = e.target.value.replace(/[^0-9]/g, "");
@@ -536,24 +563,16 @@ const Step2 = () => {
                             message: "Only numbers from 1 to 10 are allowed",
                           },
                         })}
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: 0,
-                          }
-                        }}
                         error={!!errors.heightFt}
                         helperText={errors.heightFt?.message || ""}
                       />
                     </div>
                     <div className="col-span-6">
-                      <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700 mb-1">
-                        inches<span className="text-red-500">*</span>
-                      </label>
                       <TextField
                         type="text"
                         inputMode="numeric"
-                        variant="outlined"
-                        label=""
+                        variant="standard"
+                        label="inches"
                         value={watch("heightIn") || ""}
                         onInput={(e) => {
                           // Strip all non-numeric characters
@@ -573,12 +592,6 @@ const Step2 = () => {
                             message: "Only valid numbers (0–11) are allowed",
                           },
                         })}
-
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: 0,
-                          }
-                        }}
                         error={!!errors.heightIn}
                         helperText={errors.heightIn?.message || ""}
                       />
@@ -590,14 +603,10 @@ const Step2 = () => {
                   </div>
                   <div className="grid grid-cols-12 gap-4">
                     <div className="col-span-6">
-
-                      <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700 mb-1">
-                        Stones<span className="text-red-500">*</span>
-                      </label>
                       <TextField
                         id="weightStones"
-                        variant="outlined"
-                        label=""
+                        variant="standard"
+                        label="stones"
                         type="text"
                         fullWidth
                         inputMode="numeric"
@@ -612,11 +621,6 @@ const Step2 = () => {
                             if (!isNaN(value) && value > 80) {
                               e.target.value;
                             }
-                          }
-                        }}
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: 0, // 👈 removes border radius
                           }
                         }}
                         {...register("weightStones", {
@@ -691,15 +695,11 @@ const Step2 = () => {
                     </div>
 
                     <div className="col-span-6">
-
-                      <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700 mb-1">
-                        Lbs<span className="text-red-500">*</span>
-                      </label>
                       <TextField
                         type="text" // Full control over input
                         inputMode="numeric" // Triggers numeric keypad on mobile
-                        variant="outlined"
-                        label=""
+                        variant="standard"
+                        label="lbs"
                         value={watch("weightLbs") || ""}
                         onInput={(e) => {
                           // Remove non-numeric characters
@@ -708,11 +708,6 @@ const Step2 = () => {
                           const value = parseInt(e.target.value, 10);
                           if (!isNaN(value)) {
                             if (value > 20) e.target.value;
-                          }
-                        }}
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: 0, // 👈 removes border radius
                           }
                         }}
                         {...register("weightLbs", {
@@ -815,88 +810,73 @@ const Step2 = () => {
                   error={!!errors.heightCm}
                   helperText={errors.heightCm?.message || ""}
                 /> */}
-                      <div className="col-span-6">
-                        <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700 mb-1">
-                          Cm<span className="text-red-500">*</span>
-                        </label>
-                        <TextField
-                          id="heightCm"
-                          variant="outlined"
-                          label=""
-                          type="text" // use text for full control
-                          fullWidth
-                          inputMode="numeric" // triggers number pad on mobile
-                          value={watch("heightCm") || ""}
-                          onInput={(e) => {
-                            // Remove anything that's not a digit
-                            e.target.value = e.target.value.replace(/[^0-9]/g, "");
 
-                            const val = parseInt(e.target.value, 10);
-                            if (!isNaN(val)) {
-                              if (val > 300) e.target.value;
-                              if (val < 1) e.target.value = "1";
-                            }
-                          }}
-                          {...register("heightCm", {
-                            required: "Height is required",
-                            pattern: {
-                              value: /^(?:[1-9]|[1-9][0-9]|[1-2][0-9]{2}|300)$/, // Matches 1–300
-                              message: "Only whole numbers from 1 to 300 are allowed",
-                            },
-                          })}
-                          error={!!errors.heightCm}
-                          helperText={errors.heightCm?.message || ""}
-                        />
-                      </div>
+                      <TextField
+                        id="heightCm"
+                        variant="standard"
+                        label="cm"
+                        type="text" // use text for full control
+                        fullWidth
+                        inputMode="numeric" // triggers number pad on mobile
+                        value={watch("heightCm") || ""}
+                        onInput={(e) => {
+                          // Remove anything that's not a digit
+                          e.target.value = e.target.value.replace(/[^0-9]/g, "");
+
+                          const val = parseInt(e.target.value, 10);
+                          if (!isNaN(val)) {
+                            if (val > 300) e.target.value;
+                            if (val < 1) e.target.value = "1";
+                          }
+                        }}
+                        {...register("heightCm", {
+                          required: "Height is required",
+                          pattern: {
+                            value: /^(?:[1-9]|[1-9][0-9]|[1-2][0-9]{2}|300)$/, // Matches 1–300
+                            message: "Only whole numbers from 1 to 300 are allowed",
+                          },
+                        })}
+                        error={!!errors.heightCm}
+                        helperText={errors.heightCm?.message || ""}
+                      />
                     </div>
 
                     {/* Weight Section */}
                     <div className="col-span-6">
                       <label htmlFor="weightKg" className="block text-[#1C1C29] font-medium mb-2">
-                        What is your current weight? *
+                        What is your current weight?*
                       </label>
 
-                      <div className="col-span-6">
-                        <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700 mb-1">
-                          Kg<span className="text-red-500">*</span>
-                        </label>
-                        <TextField
-                          id="weightKg"
-                          variant="outlined"
-                          label=""
-                          type="text"
-                          fullWidth
-                          inputMode="numeric"
-                          value={watch("weightKg") || ""}
-                          onInput={(e) => {
-                            // Strip non-digits
-                            e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                      <TextField
+                        id="weightKg"
+                        variant="standard"
+                        label="kg"
+                        type="text"
+                        fullWidth
+                        inputMode="numeric"
+                        value={watch("weightKg") || ""}
+                        onInput={(e) => {
+                          // Strip non-digits
+                          e.target.value = e.target.value.replace(/[^0-9]/g, "");
 
-                            // Prevent typing above 500
-                            if (e.target.value.length > 0) {
-                              const value = parseInt(e.target.value, 10);
-                              if (!isNaN(value) && value > 500) {
-                                e.target.value;
-                              }
+                          // Prevent typing above 500
+                          if (e.target.value.length > 0) {
+                            const value = parseInt(e.target.value, 10);
+                            if (!isNaN(value) && value > 500) {
+                              e.target.value;
                             }
-                          }}
-                          sx={{
-                            '& .MuiOutlinedInput-root': {
-                              borderRadius: 0,
-                            }
-                          }}
-                          {...register("weightKg", {
-                            required: "Weight is required",
-                            pattern: {
-                              value: /^(4[0-9]|[5-9][0-9]|[1-4][0-9]{2}|500)$/, // 40–500 only
-                              message: "Only whole numbers from 40 to 500 are allowed",
-                            },
-                          })}
-                          error={!!errors.weightKg}
-                          helperText={errors.weightKg?.message || ""}
-                        />
-
-                      </div>
+                          }
+                        }}
+                        {...register("weightKg", {
+                          required: "Weight is required",
+                          pattern: {
+                            value: /^(4[0-9]|[5-9][0-9]|[1-4][0-9]{2}|500)$/, // 40–500 only
+                            message: "Only whole numbers from 40 to 500 are allowed",
+                          },
+                        })}
+                        error={!!errors.weightKg}
+                        helperText={errors.weightKg?.message || ""}
+                      />
 
                       {/* <TextField
                   id="weightKg"
@@ -1112,24 +1092,24 @@ const Step2 = () => {
               <div className="block sm:hidden">
                 <div
                   className={`mt-2 text-center bg-gray-100 p-8 w-full rounded-md transition-colors duration-300 ease-in-out select-none ${lastConsultation?.isReturning
-                    ? bmi == 0
-                      ? "bg-gray-100"
-                      : bmi < 18.5
-                        ? "bg-red-300"
-                        : bmi > 18.5 && bmi <= 26.9
-                          ? "bg-yellow-100"
-                          : bmi > 26.9 && bmi <= 30
-                            ? "bg-green-300"
-                            : "bg-[#4DB581]"
-                    : bmi == 0
-                      ? "bg-gray-100"
-                      : bmi < 30
-                        ? "bg-red-300"
-                        : bmi >= 30
-                          ? "bg-yellow-100"
-                          : bmi > 27 && bmi <= 29.9
-                            ? "bg-green-300"
-                            : "bg-[#4DB581]"
+                      ? bmi == 0
+                        ? "bg-gray-100"
+                        : bmi < 18.5
+                          ? "bg-red-300"
+                          : bmi > 18.5 && bmi <= 26.9
+                            ? "bg-yellow-100"
+                            : bmi > 26.9 && bmi <= 30
+                              ? "bg-green-300"
+                              : "bg-[#4DB581]"
+                      : bmi == 0
+                        ? "bg-gray-100"
+                        : bmi < 30
+                          ? "bg-red-300"
+                          : bmi >= 30
+                            ? "bg-yellow-100"
+                            : bmi > 27 && bmi <= 29.9
+                              ? "bg-green-300"
+                              : "bg-[#4DB581]"
                     }`}
                 >
                   <div className="bmi-value | font-semibold text-lg">BMI Value</div>
@@ -1182,8 +1162,8 @@ const Step2 = () => {
                       type="submit"
                       disabled={errorMessage || !isValid || (showCheckBox && !isAtLeastOneCheckboxValid())}
                       className={`p-3 flex flex-col items-center justify-center ${errorMessage || !isValid || (showCheckBox && !isAtLeastOneCheckboxValid())
-                        ? "disabled:opacity-50 disabled:hover:bg-violet-700 disabled:cursor-not-allowed bg-violet-700 rounded-md"
-                        : " rounded-md bg-violet-700"
+                          ? "disabled:opacity-50 disabled:hover:bg-violet-700 disabled:cursor-not-allowed bg-violet-700 rounded-md"
+                          : " rounded-md bg-violet-700"
                         }`}
                     >
                       <span className="text-md font-semibold px-6">Next</span>
@@ -1198,24 +1178,24 @@ const Step2 = () => {
               <div className="hidden sm:block">
                 <div
                   className={`ml-8 text-center bg-gray-100 p-8 w-full rounded-md transition-colors duration-300 ease-in-out select-none ${lastConsultation?.isReturning
-                    ? bmi == 0
-                      ? "bg-gray-100"
-                      : bmi < 18.5
-                        ? "bg-red-300"
-                        : bmi > 18.5 && bmi <= 26.9
-                          ? "bg-yellow-100"
-                          : bmi > 26.9 && bmi <= 30
-                            ? "bg-green-300"
-                            : "bg-[#4DB581]"
-                    : bmi == 0
-                      ? "bg-gray-100"
-                      : bmi < 30
-                        ? "bg-red-300"
-                        : bmi >= 30
-                          ? "bg-yellow-100"
-                          : bmi > 27 && bmi <= 29.9
-                            ? "bg-green-300"
-                            : "bg-[#4DB581]"
+                      ? bmi == 0
+                        ? "bg-gray-100"
+                        : bmi < 18.5
+                          ? "bg-red-300"
+                          : bmi > 18.5 && bmi <= 26.9
+                            ? "bg-yellow-100"
+                            : bmi > 26.9 && bmi <= 30
+                              ? "bg-green-300"
+                              : "bg-[#4DB581]"
+                      : bmi == 0
+                        ? "bg-gray-100"
+                        : bmi < 30
+                          ? "bg-red-300"
+                          : bmi >= 30
+                            ? "bg-yellow-100"
+                            : bmi > 27 && bmi <= 29.9
+                              ? "bg-green-300"
+                              : "bg-[#4DB581]"
                     }`}
                 >
                   <div className="bmi-value | font-semibold text-lg">BMI Value</div>

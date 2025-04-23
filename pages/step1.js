@@ -84,7 +84,7 @@ const Step1 = () => {
     getValues,
     formState: { errors, isValid },
   } = useForm({
-    mode: "onChange",
+    mode: "onSubmit",
   });
 
   const gender = watch("gender");
@@ -96,8 +96,101 @@ const Step1 = () => {
   const [addressOptions, setAddressOptions] = useState([]);
   const [searchClicked, setSearchClicked] = useState(false);
 
+  // useEffect(() => {
+    
+  //   if (step1Data) {
+  //     setZipCode(step1Data?.address?.postalcode || "");
+  //     setValue("postCode", step1Data?.address?.postalcode || "");
+  //     setValue("firstName", step1Data?.firstName || "");
+  //     setValue("lastName", step1Data?.lastName || "");
+  //     setValue("phoneNumber", step1Data?.phoneNo || "");
+  //     setValue("gender", step1Data?.gender || "");
+  //     setValue("dateOfBirth", step1Data?.dob || "");
+  //     setValue("breastFeeding", step1Data?.pregnancy || "");
+  //     setValue("ethnicity", step1Data?.ethnicity || "");
+  //     setValue("streetAddress", step1Data?.address?.addressone || "");
+  //     setValue("streetAddress2", step1Data?.address?.addresstwo || "");
+  //     setValue("city", step1Data?.address?.city || "");
+  //     // setValue("country", lastConsultation.address?.country || "");
+
+  //     const dob = getValues("dateOfBirth");
+  //     if (!dob) {
+  //       setDobError("Date of birth is required");
+  //     } else {
+  //       const age = today.diff(dob, "year");
+  //       if (productId == 1) {
+  //         if (age < 18) {
+  //           setDobError("You must be at least 18 years old");
+  //           setValue("dateOfBirth", dob); // ❗️clear the form value to make button disabled
+  //         } else if (age > 75) {
+  //           setDobError("Wegovy (Semaglutude) is not recommended for individuals above 75 years of age");
+  //           setValue("dateOfBirth", dob); // ❗️clear the form value to make button disabled
+  //         } else {
+  //           setDobError("");
+  //           setValue("dateOfBirth", dob);
+  //         }
+  //       } else if (productId == 4) {
+  //         if (age < 18) {
+  //           setDobError("You must be at least 18 years old");
+  //           setValue("dateOfBirth", dob); // ❗️clear the form value to make button disabled
+  //         } else if (age > 85) {
+  //           setDobError("Mounjaro (Tirzepatide) is not recommended for individuals above 85 years of age");
+  //           setValue("dateOfBirth", dob); // ❗️clear the form value to make button disabled
+  //         } else {
+  //           setDobError("");
+  //           setValue("dateOfBirth", dob);
+  //         }
+  //       } else {
+  //         setDobError("");
+  //         setValue("dateOfBirth", dob);
+  //       }
+  //     }
+
+  //     setValue("state", step1Data?.address?.state || "");
+    
+  //     if (hasAnyValue) {
+  //       trigger([
+  //         "firstName",
+  //         "lastName",
+  //         "phoneNumber",
+  //         "gender",
+  //         "dateOfBirth",
+  //         "breastFeeding",
+  //         "streetAddress",
+  //         "postCode",
+  //         "state",
+  //         "city",
+  //         "ethnicity",
+  //       ]).then((isValid) => {
+  //         if (!isValid) console.log("Errors:", errors);
+  //       });
+  
+  //   }
+  // }, [setValue, trigger, step1Data]);
+
+  // 👇👇**RTK Query - Fetch addresses**👇👇
+  //   const { data, error, isLoading } = useFetchAddressesQuery(zipCode, {
+  //     skip: !searchClicked || !zipCode,
+  //   });
+
+
+
   useEffect(() => {
     if (step1Data) {
+      const hasAnyValue = !!(
+        step1Data.firstName ||
+        step1Data.lastName ||
+        step1Data.phoneNo ||
+        step1Data.dob ||
+        step1Data.address?.postalcode ||
+        step1Data.gender ||
+        step1Data.pregnancy ||
+        step1Data.ethnicity ||
+        step1Data.address?.addressone ||
+        step1Data.address?.city
+      );
+  
+      // Set all form values
       setZipCode(step1Data?.address?.postalcode || "");
       setValue("postCode", step1Data?.address?.postalcode || "");
       setValue("firstName", step1Data?.firstName || "");
@@ -110,8 +203,9 @@ const Step1 = () => {
       setValue("streetAddress", step1Data?.address?.addressone || "");
       setValue("streetAddress2", step1Data?.address?.addresstwo || "");
       setValue("city", step1Data?.address?.city || "");
-      // setValue("country", lastConsultation.address?.country || "");
-
+      setValue("state", step1Data?.address?.state || "");
+  
+      // Custom DOB validation
       const dob = getValues("dateOfBirth");
       if (!dob) {
         setDobError("Date of birth is required");
@@ -144,31 +238,28 @@ const Step1 = () => {
           setValue("dateOfBirth", dob);
         }
       }
-
-      setValue("state", step1Data?.address?.state || "");
-      trigger([
-        "firstName",
-        "lastName",
-        "phoneNumber",
-        "gender",
-        "dateOfBirth",
-        "breastFeeding",
-        "streetAddress",
-        "postCode",
-        "state",
-        "city",
-        "ethnicity",
-      ]).then((isValid) => {
-        if (!isValid) console.log("Errors:", errors);
-      });
+  
+      // Trigger validation only if data exists
+      if (hasAnyValue) {
+        trigger([
+          "firstName",
+          "lastName",
+          "phoneNumber",
+          "gender",
+          "dateOfBirth",
+          "breastFeeding",
+          "streetAddress",
+          "postCode",
+          "state",
+          "city",
+          "ethnicity",
+        ]).then((isValid) => {
+          if (!isValid) console.log("Form validation errors:", errors);
+        });
+      }
     }
   }, [setValue, trigger, step1Data]);
-
-  // 👇👇**RTK Query - Fetch addresses**👇👇
-  //   const { data, error, isLoading } = useFetchAddressesQuery(zipCode, {
-  //     skip: !searchClicked || !zipCode,
-  //   });
-
+  
   const handleSearch = () => {
     if (zipCode.trim() !== "") {
       setSearchClicked(true);

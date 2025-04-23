@@ -45,7 +45,8 @@ const Navbar = ({ isOpen, toggleSidebar }) => {
   }, [isOpenDrop]);
   const handleLogout = () => {
     setIsOpenDrop(false); // Close the dropdown
-    logout();
+    // logout();
+    alert("logout")
 
   };
   const handleRemovePid = () => {
@@ -141,7 +142,7 @@ const Navbar = ({ isOpen, toggleSidebar }) => {
                   <Link href="/dashboard/" onClick={toggleDropdown}>My Account</Link>
                 </li>
                 <li className="ligt-font px-4 py-2 text-[#1C1C29] hover:bg-gray-100 cursor-pointer">
-                  <Link href="/profile/" onClick={toggleDropdown}>
+                  <Link href="/my-profile/" onClick={toggleDropdown}>
                     My Profile
                   </Link>
                 </li>
