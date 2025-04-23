@@ -32,23 +32,23 @@ const Dose = ({
     setItemToRemove(dose);
     setShowModal(true);
   };
-  const [getInStockNotified, { isLoading, error }] = useInStockNotifiedMutation();
-  const handleNotifiedClick = async (dose) => {
-    try {
-      const response = await getInStockNotified({
-        eid: dose.pivot?.eid,
-        pid: dose.pivot?.pid,
-      }).unwrap();
-      if (response?.status === true) {
-        toast.success(response?.message);
-      } else {
-        toast.error(response?.errors);
-      }
-    } catch (err) {
-      toast.error(err?.data?.errors?.Notification);
-      console.log(err);
-    }
-  };
+  // const [getInStockNotified, { isLoading, error }] = useInStockNotifiedMutation();
+  // const handleNotifiedClick = async (dose) => {
+  //   try {
+  //     const response = await getInStockNotified({
+  //       eid: dose.pivot?.eid,
+  //       pid: dose.pivot?.pid,
+  //     }).unwrap();
+  //     if (response?.status === true) {
+  //       toast.success(response?.message);
+  //     } else {
+  //       toast.error(response?.errors);
+  //     }
+  //   } catch (err) {
+  //     toast.error(err?.data?.errors?.Notification);
+  //     console.log(err);
+  //   }
+  // };
   const handleConfirmRemove = () => {
     if (!itemToRemove) return;
     const removeitem = removeSeleted.filter((item) => item.id === itemToRemove.id);
@@ -195,7 +195,7 @@ const Dose = ({
               }}
               className="mt-2 px-2 py-2"
             >
-              <span className="inline-flex items-center justify-center px-2 py-0.5 ms-2 text-md text-green-600 cursor-pointer shadow-sm bg-green-100 hover:bg-green-200 rounded">
+              {/* <span className="inline-flex items-center justify-center px-2 py-0.5 ms-2 text-md text-green-600 cursor-pointer shadow-sm bg-green-100 hover:bg-green-200 rounded">
                 {isLoading ? (
                   <>
                     <svg className="animate-spin h-4 w-4 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -210,7 +210,7 @@ const Dose = ({
                     <span className="font-semibold text-sm px-1">Get Notified</span>
                   </>
                 )}
-              </span>
+              </span> */}
             </button>
 
             {/* Tooltip */}

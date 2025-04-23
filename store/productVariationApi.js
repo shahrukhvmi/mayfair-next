@@ -16,8 +16,8 @@ export const productVariationApi = createApi({
     // Change Password API
 
     getProductVariation: builder.query({
-      query: () => ({
-        url: "GetQuestions",
+      query: (productId) => ({
+        url: `products/GetVaritions/${productId}`,
         // url: "api/profile/GetUserDataMayfair",
         method: "GET",
       }),

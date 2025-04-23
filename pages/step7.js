@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-// import { nextStep, prevStep } from "../../store/slice/stepper";
-// import { addToCart, removeFromCart, updateCart } from "../../store/slice/cartSlice";
 import toast from "react-hot-toast";
 import NextButton from "@/Components/NextButton/NextButton";
 import BackButton from "@/Components/BackButton/BackButton";
 // import { useGetPrevsMutation, usePostStepsMutation } from "../../store/services/Steps/Steps";
-// import OrderSummary from "../OrderSummary/OrderSummary";
-// import OrderSummaryAddons from "../AddonList/OrderSummaryAddons";
-// import { addToCartAddon, removeFromCartAddon, updateCartAddon } from "../../store/slice/addonCartSlice";
-// import DosageCheckPopup from "../DosageCheckPopup/DosageCheckPopup";
 import { Checkbox, FormControlLabel } from "@mui/material";
 // import { setStockLoading } from "../../store/slice/stockLoaderSlice";
 import Dose from "@/Components/Dose/Dose";
@@ -19,6 +13,11 @@ import OrderSummary from "@/Components/OrderSummary/OrderSummary";
 import OrderSummaryAddons from "@/Components/AddonList/OrderSummaryAddons";
 import DosageCheckPopup from "@/Components/DosageCheckPopup/DosageCheckPopup";
 import StepperWrapper from "@/layout/StepperWrapper";
+import { useGetProductVariationQuery } from "@/store/productVariationApi";
+import { addToCart, removeFromCart, updateCart } from "@/store/slice/cartSlice";
+import { addToCartAddon, removeFromCartAddon, updateCartAddon } from "@/store/slice/addonCartSlice";
+import { addSelectedMessage } from "@/store/slice/selectedMessagesSlice";
+import { setItems } from "@/store/slice/itemsSlice";
 
 export default function step6() {
   useEffect(() => {
@@ -28,8 +27,12 @@ export default function step6() {
     });
   }, []);
   //   const reorder_concent = JSON.parse(localStorage.getItem("reorder") || "false"); // ✅ Convert to Boolean
-
   const dispatch = useDispatch();
+  const productId = 1;
+
+  const { data: getPrev, isLoading, isError, error, refetch } = useGetProductVariationQuery(productId);
+  // console.log(getPrev, "getPrev");
+
   const {
     register,
     handleSubmit,
@@ -39,7 +42,6 @@ export default function step6() {
   } = useForm({
     mode: "onChange",
   });
-  //   const [getPrev] = useGetPrevsMutation();
   const [removeSeleted, setRemoveSelected] = useState([]);
 
   const [removeSeletedAddon, setRemoveSelectedAddon] = useState([]);
@@ -53,7 +55,9 @@ export default function step6() {
   const [product, setProduct] = useState({});
   const addonCart = useSelector((state) => state.addonCart) || [];
 
-  //   const cart = useSelector((state) => state.cart.cart);
+  const cart = useSelector((state) => state.cart.cart);
+  const items = useSelector((state) => state.items);
+
   const [isExpiryRequired, setIsExpiryRequired] = useState(false);
 
   // ✅ useEffect to check if `product?.show_expiry` is `0` or `1`
@@ -70,59 +74,47 @@ export default function step6() {
   useEffect(() => {
     const fetchData = async () => {
       // dispatch(setStockLoading(false));
-      const pid = localStorage.getItem("pid");
+      // const pid = localStorage.getItem("pid");
       // localStorage.setItem("pid", pid);
-      const p_id = localStorage.getItem("p_id");
-      localStorage.setItem("comingFromStart", 0);
-      localStorage.setItem("start_concent", true);
-
-      if (localStorage.getItem("in_stock")) {
-        localStorage.removeItem("in_stock");
-      }
-
+      // const p_id = localStorage.getItem("p_id");
+      // localStorage.setItem("comingFromStart", 0);
+      // localStorage.setItem("start_concent", true);
+      // if (localStorage.getItem("in_stock")) {
+      //   localStorage.removeItem("in_stock");
+      // }
       try {
-        const response = await getPrev({ url, clinic_id, product_id: pid || p_id }).unwrap();
+        const response = await getPrev;
+        // console.log(response, "response");
         const res = response?.data;
+        // console.log(res, "res");
         if (res !== null) {
-          const vari = res?.selected_product?.variations || [];
-          const addon = res?.selected_product?.addons || [];
-          const pro = res?.selected_product || {};
-
+          const vari = res?.variations || [];
+          const addon = res?.addons || [];
+          const pro = res || {};
           const updatedVariations = vari.map((v, index) => ({ ...v, qty: 0, index }));
           const updatedAddons = addon.map((a, index) => ({ ...a, qty: 0, index }));
           const product = pro && typeof pro === "object" && !Array.isArray(pro) ? { ...pro, qty: 0 } : {};
-
           setProduct(product);
           setAddons(updatedAddons);
           setVariations(updatedVariations);
-
-          localStorage.setItem("items", JSON.stringify({ product, addons: updatedAddons, variations: updatedVariations }));
-
+          // localStorage.setItem("items", JSON.stringify({ product, addons: updatedAddons, variations: updatedVariations }));
+          dispatch(setItems({ product, addons: updatedAddons, variations: updatedVariations }));
           if (cart.length > 0) {
-            const items = JSON.parse(localStorage.getItem("items"));
-
             if (items) {
               const updatedVariations = items?.variations?.map((v, index) => {
                 const isSelected = cart.some((item) => item.id === v.id);
                 const cartItem = cart.find((item) => item.id === v.id);
-
                 const updatedQty = cartItem ? cartItem.qty : v.qty;
-
                 return { ...v, qty: updatedQty, index, isSelected };
               });
               setVariations(updatedVariations);
             }
-
             if (addonCart?.addonCart?.length > 0) {
-              const items = JSON.parse(localStorage.getItem("items"));
-
               if (items) {
                 const updatedAddons = items?.addons?.map((v, index) => {
                   const isSelected = addonCart?.addonCart?.some((item) => item.id === v.id);
                   const cartItem = addonCart?.addonCart?.find((item) => item.id === v.id);
-
                   const updatedQty = cartItem ? cartItem.qty : v.qty;
-
                   return { ...v, qty: updatedQty, index, isSelected };
                 });
                 setAddons(updatedAddons);
@@ -136,13 +128,13 @@ export default function step6() {
     };
 
     fetchData();
-    const items = JSON.parse(localStorage.getItem("items"));
     if (items) {
       setProduct(items.product);
       setAddons(items.addons);
       setVariations(items.variations);
     }
   }, []);
+
   const [isDoseSelected, setIsDoseSelected] = useState(false);
 
   useEffect(() => {
@@ -151,7 +143,7 @@ export default function step6() {
   }, [variations]);
 
   //   useEffect(() => {
-  //     const items = JSON.parse(localStorage.getItem("items"));
+  //     const items = useSelector((state) => state.items);
 
   //     if (items && Array.isArray(items.variations)) {
   //       const updatedVariations = items.variations.map((v, index) => {
@@ -176,10 +168,9 @@ export default function step6() {
   const [ModalMessage, setModalMessage] = useState("");
   // const cartRef = useRef();
 
-  const [AllSelectedMessage, SetAllSelectedMessage] = useState(() => {
-    // const savedMessages = localStorage.getItem("selectedMessages");
-    // return savedMessages ? { messages: JSON.parse(savedMessages) } : { messages: [] };
-  });
+  const selectedMessages = useSelector((state) => state.selectedMessages?.selectedMessages ?? []);
+
+  console.log(selectedMessages, "selectedMessages");
 
   const extractMgValue = (name) => {
     const mgMatch = name.match(/\d+(\.\d+)?/);
@@ -191,7 +182,7 @@ export default function step6() {
     const lowestDose = sortedVariations[0];
     const messages = {};
 
-    console.log(variations, selectedDose, sortedVariations, "sdsdsd");
+    // console.log(variations, selectedDose, sortedVariations, "sdsdsd");
     const selectedIndex = sortedVariations.findIndex((item) => item.mgValue === selectedDose);
     const prevDose = selectedIndex > 0 ? sortedVariations[selectedIndex - 1] : null;
 
@@ -209,17 +200,23 @@ export default function step6() {
     return messages;
   };
   //   console.log(reorder_concent, "reorder_concent");
-  //   const selectedMessages = AllSelectedMessage.messages;
+  // const selectedMessages = AllSelectedMessage.messages;
+  // console.log(AllSelectedMessage, "AllSelectedMessage");
+
   const handleVariationClick = (name, index) => {
+    // console.log("Handle Variation Clicked");
     const clickedMgValue = extractMgValue(name);
     const dynamicMessages = generateMessages(variations, clickedMgValue);
+
+    // console.log(dynamicMessages, "dynamicMessages");
 
     const sortedVariations = variations.map((item) => ({ ...item, mgValue: extractMgValue(item?.name) })).sort((a, b) => a.mgValue - b.mgValue);
 
     const lowestVariations = sortedVariations.slice(0, 2);
     const lowestMgValues = lowestVariations.map((item) => item.mgValue);
 
-    const shouldOpenModal = !stepProps.isReturning && !openedVariationIndex.includes(index) && !lowestMgValues.includes(clickedMgValue);
+    // const shouldOpenModal = !stepProps.isReturning && !openedVariationIndex.includes(index) && !lowestMgValues.includes(clickedMgValue);
+    const shouldOpenModal = !openedVariationIndex.includes(index) && !lowestMgValues.includes(clickedMgValue);
 
     if (shouldOpenModal) {
       const message = dynamicMessages[clickedMgValue] || `You have selected ${clickedMgValue}mg.`;
@@ -230,14 +227,11 @@ export default function step6() {
       const matchedVariation = variations?.find((variation) => variation.name.trim().toLowerCase() === name.trim().toLowerCase());
       const id = matchedVariation?.id || null;
 
-      SetAllSelectedMessage((prevState) => {
-        const previousMessages = Array.isArray(prevState) ? prevState : prevState?.messages || [];
+      console.log(id, "Handle Variation id");
+      console.log(name, "Handle Variation Name");
+      console.log(message, "Handle Variation message");
 
-        const newMessages = [...previousMessages, { id, name, message }];
-        localStorage.setItem("selectedMessages", JSON.stringify(newMessages));
-
-        return newMessages;
-      });
+      dispatch(addSelectedMessage({ id, name, message }));
 
       // ✅ Open modal only when needed
       setModalOpen(true);
@@ -256,15 +250,15 @@ export default function step6() {
     if (storedDoses) setDose(storedDoses);
   }, []);
 
-  const updatedItems = doses?.map((item) => {
-    console.log(selectedMessages, "selectedMessages");
-    const messageObj = selectedMessages?.find((msg) => msg?.id === item?.id);
+  // const updatedItems = doses?.map((item) => {
+  //   console.log(selectedMessages, "selectedMessages");
+  //   const messageObj = selectedMessages?.find((msg) => msg?.id === item?.id);
 
-    return {
-      ...item,
-      product_concent: messageObj ? messageObj.message : item.product_concent || "No message available",
-    };
-  });
+  //   return {
+  //     ...item,
+  //     product_concent: messageObj ? messageObj.message : item.product_concent || "No message available",
+  //   };
+  // });
 
   const handleIncrementDose = (index) => {
     setVariations((prev) =>
@@ -282,24 +276,10 @@ export default function step6() {
             const updatedQty = dose.qty + 1;
 
             const messageObj = selectedMessages?.find((msg) => msg?.id === dose?.id);
-            console.log(messageObj, "fdjdfhudfhuduhdf");
+            // console.log(messageObj, "fdjdfhudfhuduhdf");
 
             // ✅ Assign message instantly when found
             const productConcent = messageObj?.message || dose.product_concent || "No message available";
-
-            // ✅ Debugging Log (Ensure messageObj is found)
-            console.log("Adding to Cart:", {
-              id: dose?.id,
-              name: dose.name,
-              qty: updatedQty,
-              price: dose.price,
-              allowed: dose.allowed,
-              item_id: dose?.id,
-              product: product.name,
-              product_concent: productConcent, // ✅ Message instantly added
-              label: `${product.name} , ${dose?.name}`,
-              isSelected: true,
-            });
 
             dispatch(
               addToCart({
@@ -438,6 +418,7 @@ export default function step6() {
   };
   const handleSelect = (e, index) => {
     e.stopPropagation();
+    console.log(variations[index], "variations");
     const currentQty = variations[index].qty;
     const totalQtyExcludingCurrent = getTotalSelectedQty() - currentQty;
 
@@ -494,8 +475,6 @@ export default function step6() {
   };
 
   useEffect(() => {
-    const items = JSON.parse(localStorage.getItem("items"));
-
     if (items && Array.isArray(items.addons)) {
       const updatedAddons = items.addons.map((v, index) => {
         const isSelected = Array.isArray(addonCart?.addonCart) && addonCart?.addonCart?.some((item) => item.id === v.id);
@@ -578,7 +557,7 @@ export default function step6() {
                     />
                   ))}
               </div>
-              {console.log(product, "sdsdsdsd")}
+              {/* {console.log(product, "sdsdsdsd")} */}
               {product?.show_expiry === 1 && (
                 <div className="flex flex-col space-y-2 text-sm py-3 mt-6">
                   <FormControlLabel
