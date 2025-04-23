@@ -11,6 +11,7 @@ import cartReducer from "./slice/cartSlice";
 import addonCartReducer from "./slice/addonCartSlice";
 import selectedMessagesReducer from "./slice/selectedMessagesSlice";
 import itemsReducer from "./slice/itemsSlice";
+import { addressApi } from "./addressApi";
 
 // Combine all reducers
 const rootReducer = combineReducers({
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   [questionsApi.reducerPath]: questionsApi.reducer,
   [dashboardApi.reducerPath]: dashboardApi.reducer,
   [productVariationApi.reducerPath]: productVariationApi.reducer,
+  [addressApi.reducerPath]: addressApi.reducer,
 });
 
 // Persist config
@@ -39,7 +41,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // Required for redux-persist
-    }).concat(questionsApi.middleware, dashboardApi.middleware, productVariationApi.middleware), // Add RTK middleware
+    }).concat(questionsApi.middleware, dashboardApi.middleware, productVariationApi.middleware ,addressApi.middleware), // Add RTK middleware
 });
 
 // Create persistor for redux-persist
