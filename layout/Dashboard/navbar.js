@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import ApplicationLogo from "@/config/ApplicationLogo";
 import ApplicationUser from "@/config/ApplicationUser";
-// import { useProfileUserDataQuery } from "../../store/services/Dashboard/dashboardApi";
 import Link from "next/link";
 
 const Navbar = ({ isOpen, toggleSidebar }) => {
@@ -120,8 +119,8 @@ const Navbar = ({ isOpen, toggleSidebar }) => {
         {/* Logo */}
         <div className="w-32 sm:w-40">
           <Link href="/dashboard" onClick={handleRemovePid}>
-            {/* <img src="/logo.svg" className="w-32 sm:w-40" alt="Logo" /> */}
-            <ApplicationLogo logoUrl={""} className="w-32 sm:w-40" />
+            <ApplicationLogo width={120} height={60} />
+
           </Link>
         </div>
 
@@ -146,7 +145,7 @@ const Navbar = ({ isOpen, toggleSidebar }) => {
                     My Profile
                   </Link>
                 </li>
-                <li className="reg-font px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>
+                <li className="ligt-font px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>
                   Logout
                 </li>
               </ul>

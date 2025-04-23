@@ -46,11 +46,11 @@ import { useGetQuestionsQuery } from "@/store/questionsApi";
   });
 
   // Load data from localStorage
-  const stepPrevApiData = useMemo(() => localStorage.getItem("stepPrevApiData"), []);
-  const stepPrev3 = useMemo(() => localStorage.getItem("step3"), []);
-  const parsedData = stepPrevApiData ? JSON.parse(stepPrevApiData) : null;
+  // const stepPrevApiData = useMemo(() => localStorage.getItem("stepPrevApiData"), []);
+  // const stepPrev3 = useMemo(() => localStorage.getItem("step3"), []);
+  // const parsedData = stepPrevApiData ? JSON.parse(stepPrevApiData) : null;
   // const stepPrev3Data = stepPrev3 ? JSON.parse(stepPrev3) : null;
-  const stepPrev3Data = stepPrev3 !== undefined && stepPrev3 != "undefined" && stepPrev3 ? JSON.parse(stepPrev3) : undefined;
+  // const stepPrev3Data = stepPrev3 !== undefined && stepPrev3 != "undefined" && stepPrev3 ? JSON.parse(stepPrev3) : undefined;
 
   useEffect(() => {
     if (step3Data) {
@@ -92,7 +92,7 @@ import { useGetQuestionsQuery } from "@/store/questionsApi";
       });
       setResponses(initialResponses);
     }
-  }, [stepPrevApiData, stepPrev3, setValue]);
+  }, [setValue]);
 
   // Handle Changes
   const handleChange = async (id, value, isSubField = false) => {

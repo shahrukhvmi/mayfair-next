@@ -7,7 +7,7 @@ const baseQuery = fetchBaseQuery({
     // const token = getState().auth.token; 
     const token = "5359|PbvxAw7AaLUOx5G4aQIW12n7Tma3HBfE6xyufX9h7e012f8e*89JB"
     if (token) {
-      headers.set("Authorization", `Bearer ${token}`); // Setting Authorization header
+      headers.set("Authorization", `Bearer ${token}`);
     }
     return headers;
   },
@@ -17,6 +17,8 @@ const baseQuery = fetchBaseQuery({
 export const dashboardApi = createApi({
   reducerPath: "dashboardApi",
   baseQuery,
+  tagTypes: ["Products", "UserProfile"], // ✅ Add this line
+
   endpoints: (builder) => ({
     getProducts: builder.query({
       query: (data) => ({

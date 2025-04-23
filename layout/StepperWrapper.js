@@ -1,7 +1,9 @@
 import React from "react";
+import Navbar from "./Dashboard/navbar";
 
 export default function StepperWrapper({ children }) {
-  return (
+  return (<>
+    <Navbar />
     <div className={`bg-gradient-to-r from-[#e0f5fc] via-[#F3F6F2] to-[#FFF7ED] `}>
       <div className="consultation-form w-full max-w-[1366px] mx-auto flex flex-col lg:flex-row font-inter overflow-hidden min-h-screen justify-center items-center px-4 py-20">
         <div
@@ -11,5 +13,6 @@ export default function StepperWrapper({ children }) {
         </div>
       </div>
     </div>
+  </>
   );
 }

@@ -1,11 +1,18 @@
 import React from "react";
 import defaultLogo from "@/public/images/user.png";
+import Image from "next/image";
 
-const ApplicationUser = ({ logoUrl, ...props }) => {
-  // If logoUrl is provided via props (e.g. from global context or props), use it
+const ApplicationUser = ({ logoUrl, priority = false, ...props }) => {
   const logoSrc = logoUrl || defaultLogo;
 
-  return <img src={logoSrc} alt="Logo" {...props} />;
+  return (
+    <Image
+      src={logoSrc}
+      alt="User"
+      priority={priority} // ✅ Only preload if needed
+      {...props}
+    />
+  );
 };
 
 export default ApplicationUser;

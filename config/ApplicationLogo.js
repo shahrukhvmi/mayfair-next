@@ -1,11 +1,18 @@
 import React from "react";
 import defaultLogo from "@/public/images/logo.svg";
+import Image from "next/image";
 
-const ApplicationLogo = ({ logoUrl, ...props }) => {
-  // If logoUrl is provided via props (e.g. from global context or props), use it
+const ApplicationLogo = ({ logoUrl, priority = false, ...props }) => {
   const logoSrc = logoUrl || defaultLogo;
 
-  return <img src={logoSrc} alt="Logo" {...props} />;
+  return (
+    <Image
+      src={logoSrc}
+      alt="Logo"
+      priority={priority} // ✅ Now you can control this from parent
+      {...props}
+    />
+  );
 };
 
 export default ApplicationLogo;

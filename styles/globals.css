@@ -1,16 +1,19 @@
 @import "tailwindcss";
 
+
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-inter: "Inter-Regular"
 }
 
-@theme inline {
+/* @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
+} */
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -22,5 +25,196 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter);
+}
+
+* {
+  font-family: var(--font-inter);
+}
+
+input::placeholder,
+textarea::placeholder {
+  font-family: var(--font-inter);
+}
+
+
+.bg-primary {
+  background-color: #7008e7;
+}
+
+.text-primary {
+  color: #7008e7;
+}
+
+@font-face {
+  font-family: 'Figtree-Regular';
+  src: url('/public/fonts/Figtree/Figtree-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter-Bold';
+  src: url('/public/fonts/inter/Inter_28pt-Bold.ttf') format('truetype');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter-Medium';
+  src: url('/public/fonts/inter/Inter_28pt-Medium.ttf') format('truetype');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter-Regular';
+  src: url('/public/fonts/inter/Inter_28pt-Regular.ttf') format('truetype');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter-Light';
+  src: url('/public/fonts/inter/Inter_28pt-Light.ttf') format('truetype');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter-SemiBold';
+  src: url('/public/fonts/inter/Inter_28pt-SemiBold.ttf') format('truetype');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Figtree-Regular';
+  src: url('/fonts/Figtree/Figtree-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --reg-font: "Inter_28pt-Regular";
+  --med-font: "Inter_28pt-Medium";
+  --semibold-font: "Inter_28pt-SemiBold";
+  --bold-font: "Inter_28pt-Bold";
+  --light-font: "Inter_28pt-Light";
+  --figtree-reg: "Figtree-Regular";
+  --figtree-med: "Figtree-Medium";
+  --figtree-bold: "Figtree-Bold";
+}
+
+/* Global class */
+.reg-font {
+  font-family: var(--reg-font) !important;
+}
+
+.med-font {
+  font-family: var(--med-font) !important;
+}
+.bold-font {
+  font-family: var(--semibold-font) !important;
+}
+
+.semibold-font {
+  font-family: var(--semibold-font) !important;
+}
+
+.light-font {
+  font-family: var(--light-font) !important;
+}
+
+.figtree-reg {
+  font-family: var(--figtree-reg) !important;
+}
+
+.figtree-med {
+  font-family: var(--figtree-med) !important;
+}
+.figtree-bold {
+  font-family: var(--figtree-bold) !important;
+}
+
+
+/* For Webkit browsers (Chrome, Safari, Edge, etc.) */
+::-webkit-scrollbar {
+  width: 8px;
+  /* Adjust the width of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #6D28D9;
+  /* Purple color for the scrollbar thumb */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  /* Light color for the scrollbar track */
+}
+
+.dynamic-content ul {
+  list-style-type: disc;
+  /* Add bullets */
+  padding-left: 1.5rem;
+  /* Indent the list */
+}
+
+.dynamic-content li {
+  margin-bottom: 0.5rem;
+  /* Add spacing between items */
+}
+
+.field:first-child {
+  align-items: center;
+}
+
+.profile-input:before {
+  display: none;
+}
+
+.profile-input:after {
+  display: none;
+}
+
+.profile-input {
+  margin-top: 5px !important;
+}
+
+.u-profile-datePicker .MuiInputBase-root {
+  background-color: #fff;
+  margin-top: 5px;
+}
+
+.u-profile-datePicker input {
+  padding: 9px;
+}
+
+.u-update-password {
+  position: relative;
+}
+
+.u-upade-password-icon {
+  position: absolute;
+  right: 12%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.u-upade-password-icon2 {
+  position: absolute;
+  right: 12%;
+  top: 33%;
+  transform: translateY(-50%);
+}
+
+.u-update-password-error+.u-upade-password-icon {
+  top: 36%;
+}
+
+.u-update-password-error+.u-upade-password-icon2 {
+  top: 36%;
+}
+
+@media only screen and (max-width: 992px) {
+  .field:first-child {
+    align-items: flex-start;
+  }
 }

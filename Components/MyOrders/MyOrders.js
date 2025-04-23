@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { IoEye } from "react-icons/io5";
-import { Link } from "next/link";
+import Link from "next/link";
 import Pagination from "@/Components/Pagination/Pagination";
 
 const MyOrders = () => {

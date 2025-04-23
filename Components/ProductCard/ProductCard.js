@@ -1,174 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
-import StartConsultationModal from "../StartConsultationModal/StartConsultationModal";
-import ReOrderModel from "../ReOrderModel/ReOrderModel";
-import { useDispatch } from "react-redux";
-// import { setStepPrevApiData } from "../../store/slice/stepSlice";
-// import { triggerStep } from "../../store/slice/stepper";
-// import { clearCart } from "../../store/slice/cartSlice";
-// import { clearCartAddon } from "../../store/slice/addonCartSlice";
-import { base_url } from "@/config/constant";
-import { useRouter } from 'next/router';
+
+
+import { useRouter } from "next/navigation";
 
 const ProductCard = ({ id, title, image, price, status, buttonText, reorder, lastOrderDate }) => {
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [isReorderOpen, setReorderOpen] = useState(false);
-  const dispatch = useDispatch();
-  const modalOpenedRef = useRef(false);
-  // useEffect(() => {
-  //   const params = new URLSearchParams(window.location.search);
-  //   const productId = params.get("product_id");
-  //   console.log(productId, "productIdproductId")
-  //   if (productId) {
-  //     localStorage.setItem("pid", productId);
-  //     setModalOpen(true);
-  //   } else {
-  //     localStorage.removeItem("pid");
-  //   }
-  // }, []);
+  const router = useRouter();
 
-  useEffect(() => {
-    if (!modalOpenedRef.current) {
-      const params = new URLSearchParams(location.search);
-      const productId = params.get("product_id");
-      const previousId = localStorage.getItem("previous_id");
-
-      // Clear modalOpened if different product
-      if (previousId && previousId !== productId) {
-        localStorage.removeItem("modalOpened");
-      }
-
-      const shouldOpenModal =
-        (productId && !localStorage.getItem("modalOpened") && String(productId) === String(id)) || (previousId && String(previousId) === String(id));
-
-      if (shouldOpenModal) {
-        const pidToSet = productId || previousId;
-
-        localStorage.setItem("previous_id", pidToSet);
-        localStorage.setItem("pid", pidToSet);
-        localStorage.setItem("modalOpened", "true");
-
-        reorder ? setReorderOpen(true) : setModalOpen(true);
-        modalOpenedRef.current = true;
-      } else if (!productId) {
-        // ✅ only remove pid if no productId in URL
-        localStorage.removeItem("pid");
-      }
-    }
-  }, [location.search, reorder, id]);
-
-  const navigate = useRouter();
-
-  const handleClick = () => {
-    // localStorage.removeItem("previous_id")
-    if (reorder) {
-      localStorage.setItem("reorder", true);
-      setReorderOpen(true);
-      // localStorage.setItem("pid", id);
-      // localStorage.setItem("comingFromStart", 0);
-      // localStorage.setItem("start_concent", true);
-      // localStorage.setItem("currentStep", 1);
-      // dispatch(triggerStep(1));
-      // dispatch(clearCart())
-      // dispatch(clearCartAddon())
-      // localStorage.removeItem("addonCart");
-      // localStorage.removeItem("cart");
-    } else {
-      localStorage.setItem("reorder", false);
-      setModalOpen(true);
-      // localStorage.setItem("comingFromStart", 0);
-      // localStorage.setItem("start_concent", true);
-      // localStorage.setItem("currentStep", currentStep);
-      // dispatch(triggerStep(currentStep));
-      // localStorage.removeItem("addonCart");
-      // localStorage.removeItem("cart");
-      // dispatch(clearCart())
-      // dispatch(clearCartAddon())
-    }
+  const handleClick = async () => {
+    router.push('/step1')
   };
-  // post pid or save preApiData
-  // const [getPrev, { data, error, isLoading }] = useGetPrevsMutation();
-  const getPrev = [];
-  const isLoading = false;
-  const clinic_id = 1;
-  const url = base_url;
-
-  const handleConfirm = async () => {
-    localStorage.removeItem("previous_id");
-    localStorage.removeItem("p_id");
-    const pid = Number(localStorage.getItem("pid")) || id;
-    const currentStep = Number(localStorage.getItem("currentStep")) || 1;
-    const reorderStatus = JSON.parse(localStorage.getItem("reorder_concent"));
-    localStorage.removeItem("selectedMessages");
-    localStorage.removeItem("selectedVariations");
-    const ability = sessionStorage.getItem("ability");
-    const isChecked = sessionStorage.getItem("ischecked");
-
-    localStorage.setItem("pid", pid);
-    localStorage.setItem("comingFromStart", 0);
-    localStorage.setItem("start_concent", true);
-    localStorage.removeItem("modalOpened");
-
-    // Handle reordering or normal start...
-    if (reorder) {
-      if (reorderStatus) {
-        localStorage.setItem("currentStep", 1);
-        localStorage.removeItem("previous_id");
-
-        // dispatch(triggerStep(1));
-      } else {
-        localStorage.setItem("currentStep", 2);
-        localStorage.removeItem("previous_id");
-        // dispatch(triggerStep(2));
-      }
-    } else {
-      localStorage.setItem("currentStep", currentStep);
-      dispatch(triggerStep(currentStep));
-      localStorage.removeItem("previous_id");
-    }
-
-    localStorage.removeItem("addonCart");
-    localStorage.removeItem("cart");
-    localStorage.removeItem("selectedVariations");
-    localStorage.removeItem("selectedMessages");
-    // dispatch(clearCart());
-    // dispatch(clearCartAddon());
-
-    // Optional: Fetch previous step data
-    console.log(typeof reorder?.toString(), "reorder");
-    try {
-      const response = await getPrev({
-        url,
-        clinic_id,
-        product_id: id,
-        reorder: reorder ? reorder : null,
-      }).unwrap();
-      const res = response?.data;
-      if (res !== null) {
-        // dispatch(setStepPrevApiData(res));
-      }
-      // Navigate using React Router
-      navigate(`/consultation-form/?product_id=${pid}`);
-    } catch (err) {
-      console.error("Failed to fetch previous steps:", err);
-    }
-
-    setModalOpen(false);
-    setReorderOpen(false);
-  };
-
-  const handleClose = () => {
-    setReorderOpen(false);
-    setModalOpen(false);
-    localStorage.removeItem("previous_id");
-  };
-
   return (
     <>
       <div
         className="relative bg-white rounded-lg rounded-b-2xl overflow-hidden  transition-transform shadow-md"
-      // onMouseEnter={handleMouseEnter}
-      // onMouseLeave={handleMouseLeave}
+
       >
+
         {/* Out of Stock Overlay */}
         {!status && <div className="h-full w-full left-0 absolute bg-[rgba(119,136,153,0.4)] cursor-not-allowed z-10 thin-font"></div>}
 
@@ -224,16 +70,6 @@ const ProductCard = ({ id, title, image, price, status, buttonText, reorder, las
         </div>
       </div>
 
-      {isModalOpen && (
-        <StartConsultationModal
-          loading={isLoading}
-          text="Do you want to start the consultation?"
-          closeModel={handleClose}
-          onHandleConfirm={handleConfirm}
-        />
-      )}
-
-      {isReorderOpen && <ReOrderModel loading={isLoading} text="Reorder" closeModel={handleClose} onHandleConfirm={handleConfirm} />}
     </>
   );
 };

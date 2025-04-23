@@ -1,5 +1,5 @@
 import MyAccount from '@/Components/MyAccount/MyAccount'
-import DashBoardLayout from '@/layout/Dashboard/dashBoardLayout'
+import DashBoardPage from '@/layout/Dashboard/DashBoardPage'
 import React from 'react'
 
 const dashboard = () => {
@@ -7,9 +7,9 @@ const dashboard = () => {
         <>
 
 
-            <DashBoardLayout>
+            <DashBoardPage>
                 <MyAccount />
-            </DashBoardLayout>
+            </DashBoardPage>
 
         </>
     )

@@ -19,17 +19,10 @@ import StepperWrapper from "@/layout/StepperWrapper";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useGetQuestionsQuery } from "@/store/questionsApi";
+import { useFetchAddressesQuery } from "@/store/addressApi";
 
-// import { useLocation } from "react-router-dom";
-
-const Step1 = () => {
-  const dispatch = useDispatch();
-
-  const { data } = useGetQuestionsQuery();
-  dispatch(setStep3(data?.data?.medical_question));
-  // console.log(data?.data?.medical_question, "data?.data?.medical_question");
-  dispatch(setStep4(data?.data?.confirmation_question));
-
+const Stepone = () => {
+  const route = useRouter()
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -37,43 +30,13 @@ const Step1 = () => {
     });
   }, []);
 
-  const step1Data = useSelector((state) => state.steps.step1);
-
-  console.log(step1Data, "step1Data");
-
-  //   const location = useLocation();
-
-  // Parse the query string
-  //   const searchParams = new URLSearchParams(window.location.search);
-  //   const productId = searchParams.get("product_id");
-  const productId = 0;
-
-  useEffect(() => {
-    console.log("Product ID from query:", productId);
-    // you can now use productId to fetch data or set state
-  }, [productId]);
-
   // changes done on live..??
-  //   const stepPrevApiData = localStorage.getItem("stepPrevApiData");
-  //   const stepPrev = localStorage.getItem("step1");
-  //   const userData = localStorage.getItem("userData");
+  const dispatch = useDispatch();
   const [lastConsultation, setLastConsultation] = useState(null);
   const [prevStep1, setPrevStep1] = useState(null);
   const [userInfo, setUseriIfo] = useState(null);
   const [btnZipCode, setbtnZipCode] = useState(false);
 
-  // useEffect(() => {
-  //     if (stepPrevApiData !== null || stepPrev !== undefined || userData !== undefined) {
-  //         const parsedData = JSON.parse(stepPrevApiData);
-
-  //         const stepPrevParse = stepPrev !== undefined && stepPrev != "undefined" && stepPrev ? JSON.parse(stepPrev) : undefined;
-  //         const userInfo = JSON.parse(userData);
-
-  //         setLastConsultation(parsedData?.last_consultation_data?.patientInfo);
-  //         setPrevStep1(stepPrevParse);
-  //         setUseriIfo(userInfo?.profile?.user);
-  //     }
-  // }, []);
 
   const {
     register,
@@ -98,19 +61,19 @@ const Step1 = () => {
   const [searchClicked, setSearchClicked] = useState(false);
 
   useEffect(() => {
-    if (step1Data) {
-      setZipCode(step1Data?.address?.postalcode || "");
-      setValue("postCode", step1Data?.address?.postalcode || "");
-      setValue("firstName", step1Data?.firstName || "");
-      setValue("lastName", step1Data?.lastName || "");
-      setValue("phoneNumber", step1Data?.phoneNo || "");
-      setValue("gender", step1Data?.gender || "");
-      setValue("dateOfBirth", step1Data?.dob || "");
-      setValue("breastFeeding", step1Data?.pregnancy || "");
-      setValue("ethnicity", step1Data?.ethnicity || "");
-      setValue("streetAddress", step1Data?.address?.addressone || "");
-      setValue("streetAddress2", step1Data?.address?.addresstwo || "");
-      setValue("city", step1Data?.address?.city || "");
+    if (lastConsultation || prevStep1 || userInfo) {
+      setZipCode(prevStep1?.address?.postalcode || lastConsultation?.address?.postalcode || "");
+      setValue("postCode", prevStep1?.address?.postalcode || lastConsultation?.address?.postalcode || "");
+      setValue("firstName", prevStep1?.firstName || lastConsultation?.firstName || "" || userInfo?.fname);
+      setValue("lastName", lastConsultation?.lastName || prevStep1?.lastName || "" || userInfo?.lname);
+      setValue("phoneNumber", lastConsultation?.phoneNo || prevStep1?.phoneNo || "" || userInfo?.phone);
+      setValue("gender", lastConsultation?.gender || prevStep1?.gender || "" || userInfo?.gender);
+      setValue("dateOfBirth", lastConsultation?.dob || prevStep1?.dob || "" || userInfo?.dob);
+      setValue("breastFeeding", lastConsultation?.pregnancy || prevStep1?.pregnancy || "");
+      setValue("ethnicity", prevStep1?.ethnicity || "" || lastConsultation?.ethnicity);
+      setValue("streetAddress", lastConsultation?.address?.addressone || prevStep1?.address?.addressone || "");
+      setValue("streetAddress2", lastConsultation?.address?.addresstwo || prevStep1?.address?.addresstwo || "");
+      setValue("city", lastConsultation?.address?.city || prevStep1?.address?.city || "");
       // setValue("country", lastConsultation.address?.country || "");
 
       const dob = getValues("dateOfBirth");
@@ -146,7 +109,7 @@ const Step1 = () => {
         }
       }
 
-      setValue("state", step1Data?.address?.state || "");
+      setValue("state", prevStep1?.address?.state || "" || lastConsultation?.address?.state);
       trigger([
         "firstName",
         "lastName",
@@ -163,12 +126,12 @@ const Step1 = () => {
         if (!isValid) console.log("Errors:", errors);
       });
     }
-  }, [setValue, trigger, step1Data]);
+  }, [lastConsultation, setValue, trigger, prevStep1]);
 
   // 👇👇**RTK Query - Fetch addresses**👇👇
-  //   const { data, error, isLoading } = useFetchAddressesQuery(zipCode, {
-  //     skip: !searchClicked || !zipCode,
-  //   });
+  const { data, error, isLoading } = useFetchAddressesQuery(zipCode, {
+    skip: !searchClicked || !zipCode,
+  });
 
   const handleSearch = () => {
     if (zipCode.trim() !== "") {
@@ -198,14 +161,9 @@ const Step1 = () => {
     } else {
       setAddressOptions([]);
     }
-    //   }, [data]);
-  }, []);
+  }, [data]);
+  const loader = false;
 
-  //   const reorder_concent = localStorage.getItem("reorder_concent") || null;
-  //   const currentStep = useSelector((state) => state.step.currentStep);
-  //   const [postSteps, { error: isError, isLoading: loader }] = usePostStepsMutation();
-
-  //   const getPid = localStorage.getItem("pid");
 
   const onSubmit = async (data) => {
     const patientInfo = {
@@ -229,12 +187,9 @@ const Step1 = () => {
     };
 
     dispatch(setStep1(patientInfo));
-    // localStorage.setItem("reorder_concent", reorder_concent);
-    // localStorage.setItem("pid", getPid)
 
-    // dispatch(nextStep());
+    route.push("/step2")
 
-    localStorage.removeItem("previous_id");
 
     // try {
     //   const response = await postSteps({
@@ -280,7 +235,7 @@ const Step1 = () => {
 
     const age = today.diff(date, "year");
 
-    console.log(age, "Aaaggeeeeee");
+    const productId = 1
 
     if (productId == 1) {
       if (age < 18) {
@@ -379,21 +334,18 @@ const Step1 = () => {
       setWarningMessage("");
     }
   }, [gender]);
-  const error = null;
-  const loader = null;
-
-  const router = useRouter();
-
-  const handleNextBtn = () => {
-    router.push("/step2");
-  };
   return (
     <StepperWrapper>
-      <div className="pb-20 sm:pb-0 px-12 my-8">
-        <div className="text-center">
-          <h1 className="text-2xl lg:text-3xl 2xl:text-4xl font-light">{/* Step 1: <span className="font-bold">Patient Information</span> */}</h1>
 
-          <p className="text-2xl text-gray-800 mb-3 pb-2 semibold-font">Personal Information</p>
+
+      <div className="pb-20 sm:pb-0 px-12 my-8">
+
+        <div className="text-center">
+          <h1 className="text-2xl lg:text-3xl 2xl:text-4xl font-light">
+            {/* Step 1: <span className="font-bold">Patient Information</span> */}
+          </h1>
+
+          <p className="text-2xl text-gray-800 mb-3 pb-2 ">Personal Information</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:gap-6 gap-3 pe-0">
@@ -401,7 +353,10 @@ const Step1 = () => {
           <div className="flex gap-4">
             {/* First Name */}
             <div className="flex flex-col w-1/2">
-              <InputLabel htmlFor="first-name" className="mb-1 font-medium text-sm text-">
+              <InputLabel
+                htmlFor="first-name"
+                className="mb-1 font-medium text-sm text-"
+              >
                 First Name <span className="text-red-600">*</span>
               </InputLabel>
               <TextField
@@ -413,7 +368,7 @@ const Step1 = () => {
                 error={!!errors.firstName}
                 helperText={errors.firstName?.message}
                 sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
+                  '& .MuiOutlinedInput-notchedOutline': {
                     borderRadius: 0,
                   },
                   fontSize: "16px",
@@ -423,7 +378,10 @@ const Step1 = () => {
 
             {/* Last Name */}
             <div className="flex flex-col w-1/2">
-              <InputLabel htmlFor="last-name" className="mb-1 font-medium text-sm text-gray-700">
+              <InputLabel
+                htmlFor="last-name"
+                className="mb-1 font-medium text-sm text-gray-700"
+              >
                 Last Name <span className="text-red-600">*</span>
               </InputLabel>
               <TextField
@@ -435,7 +393,7 @@ const Step1 = () => {
                 error={!!errors.lastName}
                 helperText={errors.lastName?.message}
                 sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
+                  '& .MuiOutlinedInput-notchedOutline': {
                     borderRadius: 0,
                   },
                   fontSize: "16px",
@@ -447,6 +405,8 @@ const Step1 = () => {
           <div className="mb-3 sm:mb-0">
             <p className="text-xs text-gray-500 font-medium">Please enter your first and last name exactly as it appears on your ID.</p>
           </div>
+
+
 
           <div>
             <p className="font-medium text-md text-gray-700 mb-2">What is your date of birth?*</p>
@@ -467,12 +427,11 @@ const Step1 = () => {
                     // sx={{ textFieldStyles, marginTop: "0px" }}
 
                     sx={{
-                      "& .MuiOutlinedInput-notchedOutline": {
+                      '& .MuiOutlinedInput-notchedOutline': {
                         borderRadius: 0,
                       },
                       fontSize: "16px",
-                      textFieldStyles,
-                      marginTop: "0px",
+                      textFieldStyles, marginTop: "0px"
                     }}
                     slotProps={{
                       textField: {
@@ -496,18 +455,35 @@ const Step1 = () => {
 
               <label
                 className={`px-20 flex items-center gap-2  border-2  py-2 cursor-pointer transition-all duration-300
-    ${gender === "male" ? "bg-primary text-white shadow-sm border-2 border-primary" : "border-2 border-gray-300 bg-white text-gray-700"}`}
+    ${gender === "male"
+                    ? "bg-primary text-white shadow-sm border-2 border-primary"
+                    : "border-2 border-gray-300 bg-white text-gray-700"
+                  }`}
               >
-                <input type="radio" value="male" {...register("gender", { required: "Gender is required" })} className="hidden" />
+                <input
+                  type="radio"
+                  value="male"
+                  {...register("gender", { required: "Gender is required" })}
+                  className="hidden"
+                />
                 <span className="font-extrabold">Male</span>
                 {/* {gender === "male" && <FaCheck className="ml-1 text-green-500" />} */}
               </label>
 
+
               <label
                 className={`flex items-center gap-2 px-20 border-2 py-2 cursor-pointer transition-all duration-300 
-        ${gender === "female" ? "bg-primary text-white shadow-sm border-2 border-primary" : "border-2 border-gray-300 bg-white text-gray-700"}`}
+        ${gender === "female"
+                    ? "bg-primary text-white shadow-sm border-2 border-primary"
+                    : "border-2 border-gray-300 bg-white text-gray-700"
+                  }`}
               >
-                <input type="radio" value="female" {...register("gender", { required: "Gender is required" })} className="hidden" />
+                <input
+                  type="radio"
+                  value="female"
+                  {...register("gender", { required: "Gender is required" })}
+                  className="hidden"
+                />
                 <span className="font-extrabold"> Female</span>
                 {/* {gender === "female" && <FaCheck className="ml-1 text-green-500" />} */}
               </label>
@@ -516,13 +492,18 @@ const Step1 = () => {
             {errors.gender && <p className="text-red-500 text-sm mt-2">{errors.gender.message}</p>}
           </div>
 
+
+
+
           <div className="hidden sm:block">
             {gender === "female" && (
               <div className="mb-2">
                 <p className="font-medium text-md text-gray-700 sm:mb-2">Are you breastfeeding or trying to get pregnant?*</p>
                 <div className="flex gap-4">
                   <label
-                    className={`reg-font text-[#3E3E3E] px-10 py-2 border cursor-pointer ${breastFeeding === "Yes" ? "bg-primary text-white shadow-sm " : "border-2 border-gray-300 bg-white text-gray-700"
+                    className={`reg-font text-[#3E3E3E] px-10 py-2 border cursor-pointer ${breastFeeding === "Yes"
+                      ? "bg-primary text-white shadow-sm "
+                      : "border-2 border-gray-300 bg-white text-gray-700"
                       }`}
                   >
                     <input
@@ -552,7 +533,9 @@ const Step1 = () => {
                   </label>
 
                   <label
-                    className={`reg-font text-[#3E3E3E] px-10 py-2 border cursor-pointer ${breastFeeding === "No" ? "bg-primary text-white shadow-sm " : "border-2 border-gray-300 bg-white text-gray-700"
+                    className={`reg-font text-[#3E3E3E] px-10 py-2 border cursor-pointer ${breastFeeding === "No"
+                      ? "bg-primary text-white shadow-sm "
+                      : "border-2 border-gray-300 bg-white text-gray-700"
                       }`}
                   >
                     <input
@@ -603,6 +586,8 @@ const Step1 = () => {
             </label>
           )}
 
+
+
           <div className=" mt-3">
             <h6 className="font-bold text-xl text-black">Residential Address </h6>
             <p class="text-sm italic text-green-600  pt-1 pb-4">(Require for age verification purpose)</p>
@@ -616,7 +601,7 @@ const Step1 = () => {
               sx={textFieldStyles}
               className="reg-font"
               {...register("postCode", { required: "Postal Code is required" })}
-              // error={!!errors.postCode || error} // Displays error state
+              error={!!errors.postCode || error} // Displays error state
               helperText={errors.postCode?.message} // Shows error message
               fullWidth
               onChange={(e) => {
@@ -634,7 +619,7 @@ const Step1 = () => {
                         className="w-fit disabled:opacity-50 disabled:bg-gray-400 disabled:cursor-not-allowed bg-primary hover:bg-primary transition-all duration-200 py-2 px-4 mt-2 ms-2 flex text-white items-center gap-1"
                       >
                         <FaSearch className={`text-white`} />
-                        {/* <span className="mr-2 text-sm">{isLoading ? "SEARCH..." : "SEARCH"}</span> */}
+                        <span className="mr-2 text-sm">{isLoading ? "SEARCH..." : "SEARCH"}</span>
                       </button>
                     </div>
                   </>
@@ -685,7 +670,7 @@ const Step1 = () => {
                 placeholder="Enter address line 1"
                 value={watch("streetAddress") || ""}
                 sx={{
-                  "& .MuiOutlinedInput-root": {
+                  '& .MuiOutlinedInput-root': {
                     borderRadius: 0, // 👈 removes border radius
                   },
                   ...textFieldStyles, // apply your custom styles
@@ -711,7 +696,7 @@ const Step1 = () => {
                 placeholder="Enter address line 2"
                 value={watch("streetAddress2") || ""}
                 sx={{
-                  "& .MuiOutlinedInput-root": {
+                  '& .MuiOutlinedInput-root': {
                     borderRadius: 0, // 👈 removes border radius
                   },
                   ...textFieldStyles, // apply your custom styles
@@ -722,6 +707,7 @@ const Step1 = () => {
               />
             </div>
           </div>
+
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             {/* City */}
@@ -735,13 +721,14 @@ const Step1 = () => {
                 variant="outlined"
                 fullWidth
                 value={watch("city") || ""}
+
                 {...register("city", { required: "City is required" })}
                 error={!!errors.city}
                 helperText={errors.city?.message}
                 label="" // Hide built-in label
                 InputLabelProps={{ shrink: false }}
                 sx={{
-                  "& .MuiOutlinedInput-root": {
+                  '& .MuiOutlinedInput-root': {
                     borderRadius: 0, // 👈 removes border radius
                   },
                   ...textFieldStyles, // apply your custom styles
@@ -761,7 +748,7 @@ const Step1 = () => {
                 fullWidth
                 value={watch("state") || ""}
                 sx={{
-                  "& .MuiOutlinedInput-root": {
+                  '& .MuiOutlinedInput-root': {
                     borderRadius: 0, // 👈 removes border radius
                   },
                   ...textFieldStyles, // apply your custom styles
@@ -775,13 +762,14 @@ const Step1 = () => {
             </div>
           </div>
 
+
           {/* Ethnicity Selection */}
 
           <div>
             <h6 className="font-bold text-xl text-black my-6">Confirm Ethnicity for BMI</h6>
             <p className="font-med text-md text-gray pb-3 font-bold">
-              People of certain ethnicities may be suitable for treatment at a lower BMI than others, if appropriate. Does one of the following
-              options describe your ethnic group or background?
+              People of certain ethnicities may be suitable for treatment at a lower BMI than others, if appropriate. Does one of the following options
+              describe your ethnic group or background?
             </p>
             <ul className="list-disc ms-5 my-5">
               <li className="my-1 font-reg text-gray-800">South Asian</li>
@@ -840,25 +828,11 @@ const Step1 = () => {
           <div className="hidden justify-start sm:flex">
             <div className="mt-2 sm:max-w-40">
               <div className="text-center">
-                <button
-                  onClick={handleNextBtn}
-                  type="submit"
+                <NextButton
                   disabled={!isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError}
-                  className={`text-white px-9 py-2 rounded-md font-medium transition-all duration-150 ease-in ${!isValid || loader || error || !selectedEthnicity || WarningMessage || !!dobError
-                    ? "disabled:opacity-50 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                    : "text-white rounded-md bg-primary bg-violet-700"
-                    }`}
-                >
-                  {loader ? (
-                    // Loading Spinner with Label
-                    <div className="flex items-center space-x-2">
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span></span>
-                    </div>
-                  ) : (
-                    <span className="text-md font-semibold px-6">Next</span>
-                  )}
-                </button>
+                  label={"Next"}
+                  loading={loader}
+                />
               </div>
             </div>
           </div>
@@ -889,8 +863,9 @@ const Step1 = () => {
           </div>
         </form>
       </div>
+
     </StepperWrapper>
   );
 };
 
-export default Step1;
+export default Stepone;

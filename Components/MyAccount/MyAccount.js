@@ -1,123 +1,138 @@
-// pages/my-account.js
-
-import React from "react";
-import Head from "next/head";
+import React, { useState } from "react";
 import ProductCard from "@/Components/ProductCard/ProductCard";
 import { Skeleton } from "@mui/material";
-export async function getStaticProps() {
-  return {
-    props: {
-      title: "About Us - Mayfair",
-      description: "This is a static about page.",
-    },
-  };
-}
+import { useGetProductsQuery } from "@/store/dashboardApi";
 
-// Skeleton UI Card
 const SkeletonCard = () => (
   <div className="p-4 my-3 bg-white rounded-lg shadow-md">
     <Skeleton variant="rectangular" height={208} className="mb-4 rounded-lg" />
+
     <Skeleton variant="text" sx={{ fontSize: "1rem" }} width="80%" />
+
     <Skeleton variant="text" sx={{ fontSize: "0.875rem" }} width="60%" />
+
     <Skeleton variant="rectangular" height={40} className="mt-4 rounded-md" />
+
+
   </div>
 );
 
-const MyAccount = ({ data }) => {
-  const isLoading = !data;
-  console.log(data, "sadsadsda")
+
+
+const MyAccount = () => {
+  const { data, error, isLoading } = useGetProductsQuery();
+  // const [data, setData] = useState(null)
+
+  // const fetchBaseQuery = async () => {
+  //   try {
+  //     const response = await fetch("https://staging.mayfairweightlossclinic.co.uk/api/products/GetAllProducts");
+
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
+  //     const data = await response.json();
+  //     setData(data);
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     return null;
+  //   }
+  // };
+
+  // fetchBaseQuery()
+
   return (
-    <>
-      <Head>
-        <title>My Account - Treatments | Mayfair Clinic</title>
-        <meta name="description" content="View available and reorder weight loss treatments from Mayfair Weight Loss Clinic." />
-        <meta name="keywords" content="weight loss, treatments, reorder, Mayfair Clinic, injections" />
-        <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="My Account - Mayfair Weight Loss Clinic" />
-        <meta property="og:description" content="Manage and reorder your treatments online with ease." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://mayfairweightlossclinic.co.uk/my-account" />
-        <meta property="og:image" content="/images/meta-image.jpg" />
-      </Head>
-
-      <div className="p-5 sm:p-10 sm:bg-gray-50 sm:min-h-screen sm:rounded-lg sm:shadow-md my-5">
-
-        {/* ✨ Reorder Section */}
-        {!data && <p className="text-red-500">❌ Failed to load data.</p>}
-        {data?.reorder && (
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold mb-4">Reorder Treatment</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.isArray(data.reorder) ? (
-                data.reorder.map((product, index) => (
+    <div className={"p-5 sm:p-10 sm:bg-gray-50 sm:min-h-screen sm:rounded-lg sm:shadow-md my-5"}>
+      {/* ✅ Reorder Treatment Section */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <SkeletonCard key={index} />
+          ))}
+        </div>
+      ) : data?.data?.reorder && (
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold mb-4">Reorder Treatment</h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {data?.data?.reorder ? (
+              !Array.isArray(data.data.reorder) ? (
+                <ProductCard
+                  id={data?.data?.reorder?.id}
+                  title={data?.data?.reorder?.name}
+                  image={data?.data?.reorder?.img}
+                  price={data?.data?.reorder?.price || "N/A"}
+                  status={data?.data?.reorder?.inventories?.[0]?.status}
+                  lastOrderDate={data?.data?.reorder?.lastOrderDate}
+                  buttonText={"Reorder Consultation"}
+                  reorder={true}
+                />
+              ) : (
+                data?.data?.reorder.map((product, index) => (
                   <ProductCard
                     key={product?.id || index}
                     id={product?.id}
                     title={product?.name}
                     image={product?.img}
                     price={product?.price || "N/A"}
-                    status={product?.inventories?.[0]?.status}
-                    buttonText="Reorder Consultation"
-                    reorder
+                    status={data?.data?.reorder?.inventories?.[0]?.status}
+                    buttonText={"Reorder Consultation"}
+                    reorder={true}
                   />
                 ))
-              ) : (
-                <ProductCard
-                  id={data.reorder.id}
-                  title={data.reorder.name}
-                  image={data.reorder.img}
-                  price={data.reorder.price || "N/A"}
-                  status={data.reorder.inventories?.[0]?.status}
-                  lastOrderDate={data.reorder.lastOrderDate}
-                  buttonText="Reorder Consultation"
-                  reorder
-                />
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* ✨ Available Products */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <SkeletonCard key={index} />
-            ))}
-          </div>
-        ) : data?.products?.length > 0 ? (
-          <>
-            <header className="pb-9">
-              <h1 className="text-2xl font-semibold text-gray-900">Available Treatments</h1>
-              <p className="text-gray-600 text-sm mt-2">
-                We offer the following weight loss injections treatment options to help you in your weight loss journey...
+              )
+            ) : (
+              <p className="text-start reg-font text-sm text-gray-600">
+                No reorder treatments available.
               </p>
-            </header>
+            )}
+          </div>
+        </div>
+      )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data.products
-                .sort((a, b) => (a.sequence || 0) - (b.sequence || 0))
+      {/* ✅ Available Treatments Section */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <SkeletonCard key={index} />
+          ))}
+        </div>
+      ) : data?.data?.products && (
+        <>
+          <header className="pb-9">
+            <h1 className=" text-2xl text-left font-semibold text-gray-900">
+              Available Treatments
+            </h1>
+            <p className="text-gray-600 text-left text-sm leading-relaxed xl:w-3/4 mt-2 ">
+              We offer the following weight loss injections treatment options to help you in your weight loss journey. You can request weight loss injections online at Mayfair Weight Loss Clinic. All treatment options are subject to approval by our UK-registered prescribers following the completion and assessment of the medical consultation form. View the weight loss treatment options below for more information. </p>
+          </header>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {data?.data?.products?.length > 0 ? (
+              [...data.data.products]
+                .sort((a, b) => (a.sequence || 0) - (b.sequence || 0)) // sort by sequence
                 .map((product) => (
                   <ProductCard
-                    key={product.id}
-                    id={product.id}
-                    title={product.name}
-                    image={product.img}
-                    price={product.price || "N/A"}
-                    status={product.inventories?.[0]?.status}
-                    buttonText="Start Consultation"
+                    key={product?.id || product?.sequence}
+                    id={product?.id}
+                    title={product?.name}
+                    image={product?.img}
+                    price={product?.price || "N/A"}
+                    status={product?.inventories?.[0]?.status}
+                    buttonText={"Start Consultation"}
                     reorder={false}
                   />
-                ))}
-            </div>
-          </>
-        ) : (
-          <p className="text-yellow-500">⚠️ No products found.</p>
-        )}
-      </div>
-    </>
+                ))
+            ) : (
+              <p className="text-start reg-font text-sm text-gray-600">
+                No available treatments at the moment.
+              </p>
+            )}
+          </div>
+
+        </>
+      )}
+    </div>
   );
 };
 
 export default MyAccount;
-
-
